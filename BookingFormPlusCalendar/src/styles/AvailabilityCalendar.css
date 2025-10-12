@@ -1,0 +1,177 @@
+/* Import fonts that match Nomad Farm's typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* Custom SoilMates font */
+@font-face {
+    font-family: 'SoilMates';
+    src: url('../assets/fonts/SoilMates.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SoilMates';
+    src: url('../assets/fonts/SoilMates.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Global font override for calendar */
+.availability-calendar * {
+    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif !important;
+}
+
+.booking-calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 48px 0 20px 0;
+    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+}
+
+.availability-calendar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+    min-width: 1200px;
+    padding: 0 36px;
+}
+
+.day-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 350px;
+    min-width: 280px;
+}
+
+.day-header {
+    text-align: center;
+    padding: 16px 12px;
+    background-color: #763F24;
+    color: white;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+}
+
+.day-slots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.time-slot-button {
+    padding: 10px 14px;
+    background-color: #F5EDD0;
+    border: 3px solid #763F24;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #763F24;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 500;
+    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.time-slot-button:hover {
+    border-color: #228b22;
+    background-color: #f0f8f0;
+    transform: translateY(-1px);
+}
+
+.time-slot-button.selected {
+    background-color: #228b22;
+    border-color: #228b22;
+    color: white;
+    font-weight: 600;
+}
+
+.no-availability {
+    text-align: center;
+    padding: 16px;
+    color: #999;
+    font-style: italic;
+    font-size: 0.9rem;
+    grid-column: 1 / -1;
+    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+    font-family: 'SoilMates', 'Amatic SC', serif;
+}
+
+.slot {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+}
+
+.slot:hover {
+    background-color: #f0f0f0;
+}
+
+.slot.selected {
+    background-color: #007bff;
+    color: white;
+}
+
+.slot.unavailable {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* Media queries to ensure horizontal layout on all screen sizes */
+@media (max-width: 768px) {
+    .availability-calendar {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 16px;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .day-column {
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .availability-calendar {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 12px;
+        max-width: 100%;
+        overflow-x: auto;
+        padding: 0 8px;
+    }
+
+    .day-column {
+        min-width: 180px;
+    }
+}

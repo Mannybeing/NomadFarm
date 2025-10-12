@@ -1,0 +1,1551 @@
+/* NomadBooking.css - Earthy Nomad Farm Design with Two-Column Layout */
+
+/* Ensure body background matches */
+body,
+html {
+    background-color: #F5EDD0 !important;
+    margin: 0;
+    padding: 0;
+}
+
+/* Custom local fonts - Using relative path from src directory */
+
+.right-column {
+    background-color: transparent;
+    padding: 48px 0;
+    border-radius: 0;
+    border: none;
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 12px;
+    color: #763F24;
+    font-weight: 500;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'SoilMates', sans-serif !important;
+}
+
+.booking-container input[type="text"],
+.booking-container input[type="email"],
+.booking-container input[type="tel"],
+.booking-container textarea,
+.booking-container select {
+    width: 100% !important;
+    padding: 16px 20px !important;
+    border: 2px solid #763F24 !important;
+    border-radius: 25px !important;
+    background-color: #F5EDD0 !important;
+    font-size: 16px !important;
+    /* 16px prevents zoom on iOS */
+    font-family: 'SoilMates', sans-serif !important;
+    color: #763F24 !important;
+    transition: all 0.3s ease !important;
+    box-sizing: border-box !important;
+    min-height: 56px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 10px !important;
+    -webkit-appearance: none !important;
+    /* Remove iOS styling */
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+
+/* Mobile-specific centering override with higher specificity */
+@media (max-width: 768px) {
+
+    .booking-container .booking-container input[type="text"],
+    .booking-container .booking-container input[type="email"],
+    .booking-container .booking-container input[type="tel"],
+    .booking-container .booking-container textarea,
+    .booking-container .booking-container select {
+        max-width: 90vw !important;
+        width: 90vw !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+        padding: 18px 24px !important;
+        font-size: 16px !important;
+        min-height: 60px !important;
+        border-radius: 30px !important;
+        border-width: 3px !important;
+        box-sizing: border-box !important;
+    }
+
+    .booking-container textarea {
+        min-height: 120px !important;
+        padding: 20px 24px !important;
+    }
+
+    /* Force wider form fields with viewport units */
+    .booking-container input,
+    .booking-container select,
+    .booking-container textarea {
+        width: 85vw !important;
+        max-width: 85vw !important;
+        min-width: 280px !important;
+    }
+
+    .country-code-select {
+        max-width: 85vw !important;
+        width: 85vw !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+        padding: 18px 24px !important;
+        font-size: 16px !important;
+        min-height: 60px !important;
+        border-radius: 30px !important;
+        border-width: 3px !important;
+    }
+}
+
+/* Placeholder text styling */
+.booking-container input[type="text"]::placeholder,
+.booking-container input[type="email"]::placeholder,
+.booking-container input[type="tel"]::placeholder,
+.booking-container textarea::placeholder {
+    color: #763F24 !important;
+    opacity: 1 !important;
+    font-weight: 300 !important;
+}
+
+.booking-container input[type="text"]::-webkit-input-placeholder,
+.booking-container input[type="email"]::-webkit-input-placeholder,
+.booking-container input[type="tel"]::-webkit-input-placeholder,
+.booking-container textarea::-webkit-input-placeholder {
+    color: #763F24 !important;
+    opacity: 1 !important;
+    font-weight: 300 !important;
+}
+
+.booking-container input[type="text"]::-moz-placeholder,
+.booking-container input[type="email"]::-moz-placeholder,
+.booking-container input[type="tel"]::-moz-placeholder,
+.booking-container textarea::-moz-placeholder {
+    color: #763F24 !important;
+    opacity: 1 !important;
+    font-weight: 300 !important;
+}
+
+.booking-container input[type="text"]:-ms-input-placeholder,
+.booking-container input[type="email"]:-ms-input-placeholder,
+.booking-container input[type="tel"]:-ms-input-placeholder,
+.booking-container textarea:-ms-input-placeholder {
+    color: #763F24 !important;
+    opacity: 1 !important;
+    font-weight: 300 !important;
+}
+
+/* Country code select styling */
+.custom-country-select {
+    position: relative !important;
+    display: inline-block !important;
+}
+
+.country-code-select {
+    width: 100px !important;
+    max-width: 100px !important;
+    min-width: 100px !important;
+    flex: 0 0 100px !important;
+    padding: 16px 25px 16px 16px !important;
+    border: 2px solid #763F24 !important;
+    border-radius: 25px !important;
+    background-color: #F5EDD0 !important;
+    font-size: 1rem !important;
+    background-size: 10px !important;
+    background-position: right 10px center !important;
+    text-align: left !important;
+    overflow: visible !important;
+    font-family: 'SoilMates', system-ui, -apple-system, sans-serif !important;
+    color: #763F24 !important;
+}
+
+/* Custom dropdown options styling */
+.custom-country-dropdown {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background-color: #F5EDD0 !important;
+    border: 2px solid #763F24 !important;
+    border-radius: 12px !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    z-index: 1000 !important;
+    margin-top: 4px !important;
+    box-shadow: 0 4px 12px rgba(118, 63, 36, 0.15) !important;
+}
+
+.custom-country-option {
+    padding: 12px 16px !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid rgba(166, 124, 82, 0.3) !important;
+    font-size: 0.9rem !important;
+    color: #763F24 !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.custom-country-option:hover {
+    background-color: #E5D7B8 !important;
+}
+
+.custom-country-option:last-child {
+    border-bottom: none !important;
+}
+
+/* Ensure all select elements look like input fields */
+.booking-container select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23763F24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 16px center !important;
+    background-size: 16px !important;
+    padding: 16px 50px 16px 20px !important;
+    border-radius: 25px !important;
+    border: 2px solid #763F24 !important;
+    background-color: #F5EDD0 !important;
+    height: auto !important;
+    min-height: 56px !important;
+    line-height: 1.5 !important;
+    font-size: 1rem !important;
+    box-sizing: border-box !important;
+}
+
+.booking-container select:focus,
+.booking-container input:focus,
+.booking-container textarea:focus {
+    outline: none !important;
+    border-color: #763F24 !important;
+    box-shadow: 0 0 0 3px rgba(118, 63, 36, 0.1) !important;
+}
+
+@font-face {
+    font-family: 'SoilMates';
+    src: url('./fonts/SoilMates.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SoilMates';
+    src: url('./fonts/SoilMates.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Import fonts that match Nomad Farm's typography as fallbacks */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap');
+
+/* Custom fonts similar to Nomad Farm's stack */
+/* Soil Mates alternative - using a playful, organic serif */
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
+/* Helvetica alternative - already good with Inter */
+/* Bocalupo alternative - using a clean sans-serif */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* Global font defaults - SoilMates for all text */
+* {
+    font-family: 'SoilMates', sans-serif !important;
+}
+
+/* Force SoilMates on all form elements */
+.booking-container *,
+.form-group *,
+label,
+input,
+textarea,
+select,
+button,
+div,
+span,
+p {
+    font-family: 'SoilMates', sans-serif !important;
+}
+
+/* Headers use SoilMates */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'SoilMates', sans-serif !important;
+}
+
+.booking-container {
+    max-width: 100% !important;
+    margin: 0 auto;
+    padding: 32px 10px;
+    background-color: #F5EDD0 !important;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: 'SoilMates', sans-serif !important;
+    min-height: 100vh;
+    width: 100vw;
+}
+
+h1 {
+    text-align: center;
+    color: #763F24 !important;
+    margin-bottom: 12px;
+    font-family: 'SoilMates', sans-serif !important;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #763F24;
+    margin-bottom: 48px;
+    font-size: 1.4rem;
+    font-weight: 400;
+    font-family: 'SoilMates', sans-serif !important;
+}
+
+/* Single Column Layout - Full Width Form */
+.form-columns {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100% !important;
+    margin: 0;
+    gap: 48px;
+    padding: 0 10px;
+}
+
+.left-column {
+    background-color: transparent;
+    padding: 0 10px;
+    border-radius: 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.right-column {
+    background-color: transparent;
+    padding: 48px 10px;
+    border-radius: 0;
+    border: none;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Form Field Styling */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #763F24;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'SoilMates', sans-serif !important;
+}
+
+label .required {
+    color: #d2691e;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 20px 24px;
+    border: 3px solid #763F24;
+    border-radius: 25px;
+    background-color: #F5EDD0;
+    font-size: 1.3rem;
+    font-family: 'SoilMates', sans-serif !important;
+    color: #763F24;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #228b22;
+    box-shadow: 0 0 0 3px rgba(34, 139, 34, 0.1);
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+    border-radius: 20px;
+}
+
+/* Radio Button Groups */
+.radio-group {
+    display: flex;
+    gap: 24px;
+    margin-top: 8px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.radio-item input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #763F24;
+    border-radius: 50%;
+    background-color: #F5EDD0;
+    cursor: pointer;
+    appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.radio-item input[type="radio"]:checked {
+    border-color: #228b22;
+    background-color: #F5EDD0;
+}
+
+.radio-item input[type="radio"]:checked::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #228b22;
+}
+
+.radio-item label {
+    margin: 0;
+    font-family: 'SoilMates', sans-serif !important;
+    font-weight: 400;
+    font-size: 1rem;
+    text-transform: none;
+    letter-spacing: normal;
+    color: #763F24;
+    cursor: pointer;
+}
+
+/* Checkbox Groups */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #763F24;
+    border-radius: 4px;
+    background-color: #F5EDD0;
+    cursor: pointer;
+    appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.checkbox-item input[type="checkbox"]:checked {
+    border-color: #228b22;
+    background-color: #228b22;
+}
+
+.checkbox-item input[type="checkbox"]:checked::before {
+    content: '✓';
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.checkbox-item label {
+    margin: 0;
+    font-family: 'SoilMates', sans-serif !important;
+    font-weight: 400;
+    font-size: 0.95rem;
+    text-transform: none;
+    letter-spacing: normal;
+    color: #763F24;
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+/* Select Dropdown */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23763F24' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 50px;
+}
+
+/* Error Styling */
+.error-text {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 4px;
+    font-weight: 500;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+.form-group.error input,
+.form-group.error textarea,
+.form-group.error select {
+    border-color: #dc3545;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    width: 100%;
+    max-width: 600px;
+    padding: 24px 40px;
+    background-color: #763F24;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 48px;
+    font-family: 'SoilMates', sans-serif !important;
+    align-self: center;
+}
+
+button[type="submit"]:hover {
+    background-color: #a0522d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+}
+
+button[type="submit"]:disabled {
+    background-color: #bbb;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Helper Text */
+.helper-text {
+    font-size: 0.875rem;
+    color: #763F24;
+    margin-top: 4px;
+    font-style: italic;
+    line-height: 1.4;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 300;
+}
+
+/* Calendar Section Header - Nice Styling */
+.calendar-header {
+    color: #763F24;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    font-family: 'SoilMates', sans-serif !important;
+}
+
+/* Calendar Navigation */
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding: 16px 60px;
+    background-color: #F5EDD0;
+    border: 3px solid #763F24;
+    border-radius: 25px;
+    box-shadow: 0 2px 8px rgba(139, 69, 19, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+}
+
+.nav-button {
+    background-color: #763F24;
+    color: white;
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(139, 69, 19, 0.3);
+    flex-shrink: 0;
+}
+
+.nav-button:hover {
+    background-color: #a0522d;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(139, 69, 19, 0.4);
+}
+
+.nav-button:active {
+    transform: scale(0.95);
+}
+
+.month-year {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #763F24;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'SoilMates', sans-serif !important;
+    text-align: center;
+    white-space: nowrap;
+    flex: 1;
+    margin: 0 20px;
+}
+
+/* Success Message */
+.success-message {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    color: #155724;
+    font-size: 1.1rem;
+    margin-top: 32px;
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 32px;
+    color: #763F24;
+    font-size: 1.1rem;
+}
+
+/* Timezone Note - Compact */
+.tz-note {
+    font-size: 0.75rem;
+    color: #763F24;
+    text-align: center;
+    margin-top: 8px;
+    padding: 6px;
+    background-color: rgba(139, 69, 19, 0.05);
+    border-radius: 8px;
+    border: 1px solid #763F24;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .form-columns {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .right-column {
+        position: static;
+    }
+
+    .booking-container {
+        padding: 24px;
+        margin: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .booking-container {
+        padding: 20px 8px;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 100vh;
+    }
+
+    /* Center the main form */
+    form {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h1 {
+        font-size: 2rem;
+        color: #763F24 !important;
+        text-align: center;
+        margin: 0 auto 16px auto;
+        padding: 0 20px;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-size: 1rem;
+        margin: 0 auto 24px auto;
+        padding: 0 20px;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* Main form container centering on mobile */
+    .form-columns {
+        gap: 24px;
+        padding: 0 16px;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .right-column {
+        padding: 24px 16px;
+        margin: 0;
+        background-color: transparent;
+        border-radius: 0;
+        border: none;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Center calendar header */
+    .calendar-header {
+        font-size: 1.3rem;
+        text-align: center;
+        margin-bottom: 16px;
+        width: 100%;
+    }
+
+    .left-column {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    /* Additional mobile centering improvements */
+    .form-group>* {
+        text-align: center;
+    }
+
+    /* Center radio groups on mobile */
+    .radio-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .radio-group label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        text-align: left;
+    }
+
+    /* Center form groups on mobile */
+    .form-group {
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    .form-group label {
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 85vw !important;
+        max-width: 85vw !important;
+        min-width: 280px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
+    .form-group>div {
+        width: 100% !important;
+        max-width: 400px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* Improve WhatsApp country selector on mobile */
+    .custom-country-select {
+        min-width: 120px;
+    }
+
+    .custom-country-dropdown {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .booking-container {
+        padding: 20px 16px;
+        margin: 0;
+        min-height: 100vh;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+        color: #763F24 !important;
+        text-align: center;
+        line-height: 1.3;
+        margin-bottom: 8px;
+        width: 100%;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        line-height: 1.4;
+        text-align: center;
+        margin-bottom: 24px;
+        width: 100%;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .form-columns {
+        padding: 0;
+        gap: 24px;
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .left-column,
+    .right-column {
+        padding: 0;
+    }
+
+    /* Mobile-optimized form inputs - simpler approach */
+    .booking-container input[type="text"],
+    .booking-container input[type="email"],
+    .booking-container input[type="tel"],
+    .booking-container textarea,
+    .booking-container select {
+        padding: 18px 24px !important;
+        font-size: 16px !important;
+        min-height: 60px !important;
+        border-radius: 30px !important;
+        border-width: 3px !important;
+    }
+
+    /* Textarea specific mobile styling */
+    .booking-container textarea {
+        min-height: 120px !important;
+        resize: vertical;
+        padding: 20px 24px !important;
+    }
+
+    /* Mobile-optimized labels */
+    label {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+
+    /* Mobile WhatsApp input group - Center the flex container */
+    .whatsapp-input-container {
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 85vw !important;
+        max-width: 85vw !important;
+        min-width: 280px !important;
+        margin: 0 auto !important;
+        align-items: center !important;
+        justify-content: center !important;
+        display: flex !important;
+    }
+
+    .custom-country-select {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
+    /* Ensure WhatsApp phone input is also centered */
+    .form-group input[type="tel"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
+    .country-code-select {
+        padding: 18px 24px !important;
+        font-size: 16px !important;
+        min-height: 60px !important;
+        border-radius: 30px !important;
+        border-width: 3px !important;
+    }
+
+    /* Mobile submit button */
+    button[type="submit"] {
+        padding: 20px 32px;
+        font-size: 1.1rem;
+        width: 85vw !important;
+        max-width: 85vw !important;
+        min-width: 280px !important;
+        margin: 24px auto 0 auto;
+        border-radius: 30px;
+        min-height: 64px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        display: block;
+    }
+
+    /* Mobile calendar styling */
+    .calendar-header {
+        font-size: 1.3rem;
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    .calendar-nav {
+        justify-content: space-between;
+        margin-bottom: 16px;
+        padding: 12px 20px;
+        max-width: 100%;
+        margin: 0 auto 16px auto;
+        overflow: hidden;
+        width: calc(100% - 16px);
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-button {
+        padding: 0;
+        font-size: 1.2rem;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+    }
+
+    .month-year {
+        font-size: 1.1rem;
+        flex: 1;
+        text-align: center;
+        margin: 0 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Mobile calendar grid */
+    .calendar-grid {
+        gap: 4px;
+    }
+
+    .calendar-day {
+        min-height: 60px;
+        font-size: 0.9rem;
+    }
+
+    .time-slot {
+        padding: 8px 6px;
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+
+    /* Mobile timezone display */
+    .tz-note {
+        font-size: 0.85rem;
+        text-align: center;
+        margin-top: 12px;
+    }
+
+    /* Better error and loading states for mobile */
+    .calendar-loading,
+    .calendar-error {
+        font-size: 1rem;
+        text-align: center;
+        padding: 20px;
+        margin: 16px 0;
+        border-radius: 15px;
+        line-height: 1.4;
+    }
+
+    .calendar-error {
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 2px solid rgba(220, 53, 69, 0.3);
+        color: #721c24;
+    }
+
+    .calendar-loading {
+        background-color: rgba(118, 63, 36, 0.1);
+        border: 2px solid rgba(118, 63, 36, 0.3);
+        color: #763F24;
+    }
+
+    /* Error messages mobile styling */
+    .error-text {
+        font-size: 0.9rem;
+        margin-top: 6px;
+        padding: 8px 12px;
+        background-color: rgba(220, 53, 69, 0.1);
+        border-radius: 10px;
+        line-height: 1.3;
+    }
+
+    /* Helper text mobile styling */
+    .helper-text {
+        font-size: 0.85rem;
+        line-height: 1.3;
+        margin-top: 6px;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        justify-content: flex-start;
+        width: 100%;
+        margin: 24px auto;
+        padding: 20px;
+        background-color: rgba(118, 63, 36, 0.06);
+        border-radius: 30px;
+        border: 3px solid #763F24;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        cursor: default;
+        /* important */
+    }
+
+    /* THE FIX */
+    .checkbox-item input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        display: inline-block;
+        flex-shrink: 0;
+        /* do not stretch */
+        width: 24px;
+        height: 24px;
+        margin: 0;
+        border: 3px solid #763F24;
+        border-radius: 6px;
+        background-color: #fff;
+        cursor: pointer;
+        position: relative;
+        box-sizing: border-box;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    /* CHECKED STATE */
+    .checkbox-item input[type="checkbox"]:checked {
+        background-color: #228b22;
+        border-color: #228b22;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked::after {
+        content: "✓";
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        position: absolute;
+        left: 4px;
+        top: -1px;
+    }
+
+    /* LABEL */
+    .checkbox-item label {
+        font-size: 1.1rem;
+        line-height: 1.4;
+        color: #763F24;
+        font-weight: 500;
+        flex: 1;
+        cursor: pointer;
+        user-select: none;
+    }
+}
+
+
+/* Additional mobile responsiveness for smaller screens */
+@media (max-width: 480px) {
+    .booking-container {
+        padding: 12px 4px;
+    }
+
+    .form-columns {
+        padding: 0 8px;
+        max-width: 100%;
+    }
+
+    .form-group {
+        padding: 0 12px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        padding: 0 16px;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+        padding: 0 16px;
+    }
+
+    /* Ensure perfect centering on very small screens */
+    .form-group input,
+    .form-group select,
+    .form-group textarea,
+    .custom-country-select,
+    .country-code-select {
+        max-width: 85% !important;
+    }
+
+    /* Center submit button */
+    button[type="submit"] {
+        max-width: 85% !important;
+    }
+
+    .checkbox-item {
+        max-width: 85% !important;
+        padding: 12px;
+    }
+
+    /* Touch-friendly improvements */
+    .custom-country-option,
+    .time-slot,
+    button,
+    select,
+    input {
+        -webkit-tap-highlight-color: rgba(118, 63, 36, 0.2);
+    }
+
+    /* Improve focus states for mobile */
+    .booking-container input:focus,
+    .booking-container select:focus,
+    .booking-container textarea:focus {
+        outline: none;
+        border-color: #a0522d;
+        box-shadow: 0 0 0 3px rgba(118, 63, 36, 0.1);
+    }
+
+    /* Better spacing for calendar on very small screens */
+    .calendar-container {
+        padding: 12px;
+    }
+
+    /* Ensure minimum touch target size (44px) */
+    .time-slot,
+    .nav-button,
+    .custom-country-option {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* ULTIMATE MOBILE OVERRIDE - HIGHEST PRIORITY */
+@media (max-width: 768px) {
+
+    /* Force all form inputs to be wider on mobile */
+    .booking-container input[type="text"],
+    .booking-container input[type="email"],
+    .booking-container input[type="tel"],
+    .booking-container textarea,
+    .booking-container select,
+    .country-code-select,
+    .whatsapp-input-container,
+    button[type="submit"] {
+        width: 85vw !important;
+        max-width: 85vw !important;
+        min-width: 280px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* Ensure containers don't constrain width */
+    .form-group,
+    .custom-country-select {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* WhatsApp specific styling */
+    .whatsapp-input-container {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+}
+
+/* EMERGENCY MOBILE FIX - Force wider inputs */
+@media screen and (max-width: 768px) {
+    * {
+        box-sizing: border-box !important;
+    }
+
+    .booking-container form input,
+    .booking-container form select,
+    .booking-container form textarea,
+    .booking-container form button[type="submit"] {
+        width: calc(100vw - 40px) !important;
+        max-width: calc(100vw - 40px) !important;
+        margin: 8px auto !important;
+        display: block !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .booking-container .form-group {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Force reduced spacing on all form groups */
+    .booking-container form .form-group,
+    .booking-container .left-column .form-group,
+    .form-group {
+        margin-bottom: 12px !important;
+    }
+
+    .booking-container .form-group label {
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+    }
+
+    .booking-container .whatsapp-input-container {
+        width: calc(100vw - 40px) !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .booking-container .custom-country-select,
+    .booking-container .country-code-select {
+        width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* Center the entire form container */
+    .booking-container {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 16px 20px !important;
+    }
+
+    .booking-container form {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .form-columns {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .left-column {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+}
+
+/* ULTIMATE CENTERING FIX */
+@media screen and (max-width: 768px) {
+
+    /* Reset any conflicting margins/padding on form elements only */
+    .booking-container form input,
+    .booking-container form select,
+    .booking-container form textarea,
+    .booking-container form button[type="submit"],
+    .booking-container .whatsapp-input-container {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    /* Force perfect centering with transform method */
+    .booking-container form input,
+    .booking-container form select,
+    .booking-container form textarea,
+    .booking-container form button[type="submit"] {
+        position: relative !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100vw - 60px) !important;
+        max-width: calc(100vw - 60px) !important;
+        margin: 4px 0 !important;
+    }
+
+    /* Checkbox gets special treatment - use flexbox centering instead of transform */
+    .booking-container .checkbox-item {
+        width: calc(100vw - 60px) !important;
+        max-width: calc(100vw - 60px) !important;
+        margin: 16px auto !important;
+        position: static !important;
+        left: auto !important;
+        transform: none !important;
+        display: flex !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+    }
+
+    /* Override any inherited positioning for checkbox container */
+    .booking-container .checkbox-group,
+    .booking-container .form-group .checkbox-item {
+        position: static !important;
+        left: auto !important;
+        transform: none !important;
+        margin: 16px auto !important;
+    }
+
+    .booking-container .whatsapp-input-container {
+        position: relative !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100vw - 60px) !important;
+        max-width: calc(100vw - 60px) !important;
+        margin: 8px 0 !important;
+    }
+
+    /* Ensure parent containers allow centering */
+    .booking-container {
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 16px 20px !important;
+        text-align: center !important;
+    }
+
+    .booking-container form,
+    .form-columns,
+    .left-column {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: center !important;
+    }
+
+    .booking-container .form-group {
+        margin: 16px 0 !important;
+        padding: 0 !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* Special handling for checkbox form groups */
+    .booking-container .form-group:has(.checkbox-item) {
+        align-items: stretch !important;
+    }
+
+    .booking-container .form-group label {
+        text-align: center !important;
+        margin-bottom: 8px !important;
+    }
+}
+
+/* REDESIGNED CHECKBOX - MATCHES OTHER FORM ELEMENTS */
+@media screen and (max-width: 768px) {
+
+    /* Style the checkbox wrapper like other inputs */
+    .booking-container .checkbox-wrapper {
+        margin: 10px auto !important;
+        width: calc(100vw - 50px) !important;
+        max-width: calc(100vw - 50px) !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        position: relative !important;
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        padding: 20px !important;
+        background-color: rgba(118, 63, 36, 0.06) !important;
+        border: 3px solid #763F24 !important;
+        border-radius: 30px !important;
+        box-sizing: border-box !important;
+        text-align: left !important;
+    }
+
+    /* Style the checkbox input */
+    .booking-container .checkbox-wrapper input[type="checkbox"] {
+        width: 24px !important;
+        height: 24px !important;
+        flex-shrink: 0 !important;
+        cursor: pointer !important;
+        accent-color: #763F24 !important;
+        outline: none !important;
+        border: 2px solid #763F24 !important;
+        border-radius: 4px !important;
+        margin: 0 !important;
+        margin-top: 2px !important;
+    }
+
+    /* Remove focus outline */
+    .booking-container .checkbox-wrapper input[type="checkbox"]:focus {
+        outline: none !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Style the checkbox text */
+    .booking-container .checkbox-wrapper .checkbox-text {
+        margin: 0 !important;
+        color: #763F24 !important;
+        cursor: pointer !important;
+        font-size: 1rem !important;
+        line-height: 1.4 !important;
+        text-align: left !important;
+        flex: 1 !important;
+    }
+}
+
+/* FINAL OVERRIDE - REDUCE FORM SPACING ON MOBILE */
+@media screen and (max-width: 768px) {
+
+    .form-group,
+    .booking-container .form-group,
+    .booking-container form .form-group,
+    .booking-container .left-column .form-group {
+        margin-bottom: 12px !important;
+        margin-top: 0 !important;
+    }
+
+    /* CENTER TEXT CONTENT IN COUNTRY CODE AND PHONE INPUT */
+    .booking-container .country-code-select,
+    .booking-container .custom-country-select .country-code-select {
+        text-align: center !important;
+        padding-left: 16px !important;
+        padding-right: 30px !important;
+    }
+
+    .booking-container .whatsapp-input-container input[type="tel"] {
+        text-align: center !important;
+    }
+
+    .booking-container input[type="tel"],
+    .booking-container form input[type="tel"] {
+        text-align: center !important;
+    }
+}

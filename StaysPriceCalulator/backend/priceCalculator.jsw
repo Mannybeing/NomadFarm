@@ -1,0 +1,124 @@
+import wixData from 'wix-data';
+
+export async function calculateTotal({ checkIn, checkOut, roomType, isLocal }) {
+    // Logging for debug
+    console.log({ checkIn, checkOut, roomType, isLocal });
+
+    // 1. Fetch rates
+    const ratesData = await wixData.query("Rates")
+        .eq("roomType", roomType)
+        .find();
+    console.log('Rates:', ratesData.items);
+
+    if (!ratesData.items.length) throw new Error("Room type not found");
+    const rates = {
+        base: ratesData.items[0].base,
+        high: ratesData.items[0].high
+    };
+
+    // 2. Fetch seasons
+    const seasonData = await wixData.query("Seasons").find();
+    console.log('Seasons:', seasonData.items);
+
+    const highSeasons = seasonData.items.filter(s => s.type === 'high');
+    const baseSeasons = seasonData.items.filter(s => s.type === 'base');
+
+    // --- Date Utilities ---
+    function parseDate(dateInput) {
+        if (!dateInput) return null;
+        if (typeof dateInput === 'string') {
+            return new Date(dateInput.slice(0, 10) + 'T00:00:00');
+        }
+        if (dateInput instanceof Date) {
+            return new Date(dateInput.getFullYear(), dateInput.getMonth(), dateInput.getDate());
+        }
+        throw new Error('Invalid date input: ' + dateInput);
+    }
+
+    function normalizeDate(date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function isInSeason(date, seasons) {
+        date = normalizeDate(date);
+        return seasons.some(({ startDate, endDate }) => {
+            const start = normalizeDate(parseDate(startDate));
+            const end = normalizeDate(parseDate(endDate));
+            return date >= start && date <= end;
+        });
+    }
+
+    function calculateNights(startDate, endDate) {
+        const nights = [];
+        const date = new Date(startDate);
+        while (date < endDate) {
+            nights.push(new Date(date));
+            date.setDate(date.getDate() + 1);
+        }
+        return nights;
+    }
+
+    function getModifier(nights) {
+    if (nights >= 28) {
+        if (nights >= 112) return { type: 'discount', value: 0.20 };
+        if (nights >= 84) return { type: 'discount', value: 0.18 };
+        if (nights >= 70) return { type: 'discount', value: 0.15 };
+        if (nights >= 56) return { type: 'discount', value: 0.10 };
+        if (nights >= 42) return { type: 'discount', value: 0.05 };
+        return { type: 'discount', value: 0 };
+    } else {
+        if (nights >= 21) return { type: 'markup', value: 0.30 };
+        if (nights >= 14) return { type: 'markup', value: 0.15 };
+        if (nights >= 7) return { type: 'markup', value: 0.25 };
+        if (nights >= 3) return { type: 'markup', value: 0.30 };
+        return { type: 'markup', value: 0 };
+    }
+}
+
+    // --- Main Calculation Logic ---
+    const checkInDate = parseDate(checkIn);
+    const checkOutDate = parseDate(checkOut);
+
+    const nights = calculateNights(checkInDate, checkOutDate);
+    const totalNights = nights.length;
+
+    let highNights = 0, baseNights = 0;
+    let nightlySum = 0;
+
+    nights.forEach(date => {
+        if (isInSeason(date, highSeasons)) {
+            highNights++;
+            nightlySum += rates.high;
+        } else if (isInSeason(date, baseSeasons)) {
+            baseNights++;
+            nightlySum += rates.base;
+        }
+    });
+
+    // 1. Apply length-based adjustment
+    const modifier = getModifier(totalNights);
+    let adjustedTotal = nightlySum;
+    if (modifier.type === 'markup') {
+        adjustedTotal *= 1 + modifier.value;
+    } else if (modifier.type === 'discount') {
+        adjustedTotal *= 1 - modifier.value;
+    }
+
+    // 2. Apply local discount to adjusted total
+    if (isLocal) {
+        adjustedTotal *= 0.75;
+    }
+
+    adjustedTotal = Math.round(adjustedTotal * 100) / 100;
+
+    // 3. Return detailed result
+    return {
+        total: adjustedTotal.toFixed(2),
+        highNights,
+        baseNights,
+        totalNights,
+        modifier,
+        isLocal,
+        perNight: (Math.round((adjustedTotal / totalNights) * 100) / 100).toFixed(2)
+    };
+}

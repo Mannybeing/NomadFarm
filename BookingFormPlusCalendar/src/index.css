@@ -1,0 +1,91 @@
+@font-face {
+    font-family: 'SoilMates';
+    src: url('./styles/fonts/SoilMates.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SoilMates';
+    src: url('./styles/fonts/SoilMates.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    margin: 0;
+    font-family: 'SoilMates', sans-serif !important;
+    background-color: #f4f4f4;
+}
+
+h1,
+h2 {
+    color: #333;
+}
+
+.booking-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-columns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-column,
+.right-column {
+    width: 48%;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.error-text {
+    color: red;
+    font-size: 0.9em;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.tz-note {
+    font-size: 0.9em;
+    color: #555;
+}

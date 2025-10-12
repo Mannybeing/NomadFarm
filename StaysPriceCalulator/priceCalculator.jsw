@@ -1,0 +1,106 @@
+// This is a backend web module file for Velo by Wix
+export async function calculateTotal({ checkIn, checkOut, roomType, isLocal }) {
+    // --- FETCH RATES FROM COLLECTION INSTEAD OF STATIC OBJECT ---
+    import wixData from 'wix-data';
+
+    // Fetch rates for the roomType from a collection called 'Rates'
+    // Assume your collection has fields: 'roomType', 'base', 'high'
+    let ratesData = await wixData.query("Rates")
+        .eq("roomType", roomType)
+        .find();
+    if (!ratesData.items.length) throw new Error("Room type not found");
+    const rates = {
+        base: ratesData.items[0].base,
+        high: ratesData.items[0].high
+    };
+
+    // Fetch seasons from a 'Seasons' collection (fields: 'type', 'startDate', 'endDate')
+    let seasonData = await wixData.query("Seasons").find();
+    const highSeasons = seasonData.items.filter(s => s.type === 'high');
+    const baseSeasons = seasonData.items.filter(s => s.type === 'base');
+
+    // Helper functions (same as before, but with dynamic seasons)
+    function parseDate(dateStr) {
+        return new Date(dateStr + 'T00:00:00');
+    }
+    function normalizeDate(date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+    function isInSeason(date, seasons) {
+        date = normalizeDate(date);
+        return seasons.some(({ startDate, endDate }) => {
+            const start = normalizeDate(new Date(startDate));
+            const end = normalizeDate(new Date(endDate));
+            return date >= start && date <= end;
+        });
+    }
+    function calculateNights(startDate, endDate) {
+        const nights = [];
+        const date = new Date(startDate);
+        while (date < endDate) {
+            nights.push(new Date(date));
+            date.setDate(date.getDate() + 1);
+        }
+        return nights;
+    }
+    function getModifier(nights) {
+        if (nights >= 28) {
+            if (nights >= 112) return { type: 'discount', value: 0.20 };
+            if (nights >= 84) return { type: 'discount', value: 0.18 };
+            if (nights >= 70) return { type: 'discount', value: 0.15 };
+            if (nights >= 56) return { type: 'discount', value: 0.10 };
+            if (nights >= 42) return { type: 'discount', value: 0.05 };
+            return { type: 'discount', value: 0 };
+        } else {
+            if (nights >= 21) return { type: 'markup', value: 0.05 };
+            if (nights >= 14) return { type: 'markup', value: 0.15 };
+            if (nights >= 7) return { type: 'markup', value: 0.25 };
+            if (nights >= 3) return { type: 'markup', value: 0.30 };
+            return { type: 'markup', value: 0 };
+        }
+    }
+
+    // Now, calculation part
+    const checkInDate = parseDate(checkIn);
+    const checkOutDate = parseDate(checkOut);
+    const nights = calculateNights(checkInDate, checkOutDate);
+    const totalNights = nights.length;
+
+    let highNights = 0, baseNights = 0;
+    let nightlySum = 0;
+
+    nights.forEach(date => {
+        let nightlyRate = 0;
+        if (isInSeason(date, highSeasons)) {
+            highNights++;
+            nightlyRate = rates.high;
+        } else if (isInSeason(date, baseSeasons)) {
+            baseNights++;
+            nightlyRate = rates.base;
+        }
+        if (isLocal) {
+            nightlyRate *= 0.75;
+        }
+        nightlyRate = Math.round(nightlyRate * 100) / 100;
+        nightlySum += nightlyRate;
+    });
+
+    const modifier = getModifier(totalNights);
+    let adjustedTotal = nightlySum;
+    if (modifier.type === 'markup') {
+        adjustedTotal *= 1 + modifier.value;
+    } else if (modifier.type === 'discount') {
+        adjustedTotal *= 1 - modifier.value;
+    }
+    adjustedTotal = Math.round(adjustedTotal * 100) / 100;
+
+    return {
+        total: adjustedTotal.toFixed(2),
+        highNights,
+        baseNights,
+        totalNights,
+        modifier,
+        isLocal,
+        perNight: (Math.round((adjustedTotal / totalNights) * 100) / 100).toFixed(2)
+    };
+}
