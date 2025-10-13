@@ -15,6 +15,24 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
 }) => {
     console.log("[AvailabilityCalendar] Rendered with:", { availability, selectedSlot });
 
+    // Helper to check if a slot is within allowed hours in Mexico City time
+    const isSlotAllowed = (slot: TimeSlot): boolean => {
+        const MX_TZ = "America/Mexico_City";
+        const startDate = new Date(slot.start);
+        const endDate = new Date(slot.end);
+        // Get day of week in Mexico City time
+        const dayOfWeek = new Date(startDate.toLocaleString("en-US", { timeZone: MX_TZ })).getDay();
+        const startHour = new Date(startDate.toLocaleString("en-US", { timeZone: MX_TZ })).getHours();
+        const endHour = new Date(endDate.toLocaleString("en-US", { timeZone: MX_TZ })).getHours();
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+            // Weekend: 11-4 (11:00 to 16:59)
+            return startHour >= 11 && endHour <= 17;
+        } else {
+            // Weekday: 9-5 (9:00 to 16:59)
+            return startHour >= 9 && endHour <= 17;
+        }
+    };
+
     // Debug specific day
     const oct10 = availability.days.find(d => d.date === '2025-10-10');
     if (oct10) {
@@ -65,42 +83,45 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
 
     return (
         <div className="availability-calendar">
-            {availability.days.map((day) => (
-                <div key={day.date} className="day-column">
-                    <div className="day-header">
-                        {formatDayDate(day.date)}
+            {availability.days.map((day) => {
+                const filteredSlots = day.slots.filter(isSlotAllowed);
+                return (
+                    <div key={day.date} className="day-column">
+                        <div className="day-header">
+                            {formatDayDate(day.date)}
+                        </div>
+                        <div className="day-slots">
+                            {/* Debug logging for October 10th specifically */}
+                            {day.date === '2025-10-10' && (() => {
+                                console.log('[DEBUG] Oct 10 slots check:', {
+                                    slots: day.slots,
+                                    length: day.slots.length,
+                                    condition: day.slots.length > 0,
+                                    isArray: Array.isArray(day.slots)
+                                });
+                                return null;
+                            })()}
+                            {filteredSlots.length > 0 ? (
+                                filteredSlots.map((slot, index) => (
+                                    <button
+                                        key={`${day.date}-${index}`}
+                                        type="button"
+                                        className={`time-slot-button ${isSlotSelected(slot) ? 'selected' : ''}`}
+                                        onClick={() => handleSlotClick(slot)}
+                                        aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayDate(day.date)}`}
+                                    >
+                                        {formatTimeSlot(slot)}
+                                    </button>
+                                ))
+                            ) : (
+                                <div className="no-availability">
+                                    No availability
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    <div className="day-slots">
-                        {/* Debug logging for October 10th specifically */}
-                        {day.date === '2025-10-10' && (() => {
-                            console.log('[DEBUG] Oct 10 slots check:', {
-                                slots: day.slots,
-                                length: day.slots.length,
-                                condition: day.slots.length > 0,
-                                isArray: Array.isArray(day.slots)
-                            });
-                            return null;
-                        })()}
-                        {day.slots.length > 0 ? (
-                            day.slots.map((slot, index) => (
-                                <button
-                                    key={`${day.date}-${index}`}
-                                    type="button"
-                                    className={`time-slot-button ${isSlotSelected(slot) ? 'selected' : ''}`}
-                                    onClick={() => handleSlotClick(slot)}
-                                    aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayDate(day.date)}`}
-                                >
-                                    {formatTimeSlot(slot)}
-                                </button>
-                            ))
-                        ) : (
-                            <div className="no-availability">
-                                No availability
-                            </div>
-                        )}
-                    </div>
-                </div>
-            ))}
+                );
+            })}
         </div>
     );
 };
