@@ -9,9 +9,10 @@ import {
 import "../styles/NomadBooking.css";
 
 // Azure Functions backend URL configuration
-const BACKEND = process.env.NODE_ENV === 'production'
-    ? process.env.REACT_APP_AZURE_FUNCTION_URL || "https://nf-bookingform-dev.azurewebsites.net"
-    : "http://localhost:7071"; // For local Azure Functions development
+const BACKEND =
+    process.env.NODE_ENV === 'production'
+        ? "https://nf-bookingform-dev.azurewebsites.net"
+        : "http://localhost:7071";
 
 // Country code to display mapping (flag + code only for selected display)
 const getCountryDisplay = (countryCode: string): string => {
