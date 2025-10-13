@@ -1,5 +1,5 @@
-const { app } = require('@azure/functions');
-const { google } = require('googleapis');
+import { app } from '@azure/functions';
+import { google } from 'googleapis';
 
 // Configuration (same as your Express app)
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
