@@ -649,15 +649,16 @@ export default function NomadBooking() {
                 ...data,
                 userTimezone: userTimezone
             };
-            // Send booking data to Zapier webhook
-            const res = await fetch("https://hooks.zapier.com/hooks/catch/19558963/u6dovfj/", {
+            // Send booking data to backend, which will forward to Zapier
+            const url = `${BACKEND}/api/createBooking`;
+            const res = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bookingDataWithTimezone),
             });
             if (!res.ok) {
                 const txt = await res.text();
-                console.error("Zapier webhook failed:", res.status, txt);
+                console.error("createBooking failed:", res.status, txt);
                 throw new Error(txt || `HTTP ${res.status}`);
             }
             setSubmitted(true);
