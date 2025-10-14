@@ -533,7 +533,7 @@ export default function NomadBooking() {
 
             // Override for testing/VPN users - you can change this
             // Common US timezones: America/New_York, America/Chicago, America/Denver, America/Los_Angeles
-            const timezoneOverride = "America/Bogota"; // Colombian Standard Time
+            const timezoneOverride = "America/Mexico_City"; // Mexican Standard Time
             if (timezoneOverride) {
                 userTimezone = timezoneOverride;
                 console.log("[Booking] Timezone overridden to:", userTimezone);
@@ -645,33 +645,21 @@ export default function NomadBooking() {
         try {
             // Get user's timezone using the same method as the calendar
             let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-            // Don't override for booking submission - we want the actual user timezone
-            // The override is only for calendar display, not for booking data
-            console.log("[Booking] Detected user timezone:", userTimezone);
-
-            // Include the user's timezone in the booking data
             const bookingDataWithTimezone = {
                 ...data,
                 userTimezone: userTimezone
             };
-
-            const url = `${BACKEND}/api/createBooking`;
-            console.log("[Booking] submitting:", url, bookingDataWithTimezone);
-            console.log("[Booking] User timezone:", userTimezone);
-
-            const res = await fetch(url, {
+            // Send booking data to Zapier webhook
+            const res = await fetch("https://hooks.zapier.com/hooks/catch/19558963/u6dovfj/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bookingDataWithTimezone),
             });
             if (!res.ok) {
                 const txt = await res.text();
-                console.error("createBooking failed:", res.status, txt);
+                console.error("Zapier webhook failed:", res.status, txt);
                 throw new Error(txt || `HTTP ${res.status}`);
             }
-            const json = await res.json();
-            console.log("[Booking] booking result:", json);
             setSubmitted(true);
         } catch (err: any) {
             console.error("[Booking] submit error:", err);
