@@ -32,7 +32,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
         useRenderDiagnostics(props);
         const { availability, selectedSlot, onSlotSelect } = props;
 
-        // Helper to check if a slot is within allowed hours in Mexico City time AND at least 3 hours from now
+        // Helper to check if a slot is within allowed hours in Mexico City time
         const isSlotAllowed = (slot: TimeSlot): boolean => {
             const MX_TZ = "America/Mexico_City";
             const startDate = new Date(slot.start);
@@ -40,10 +40,6 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
             const dayOfWeek = new Date(startDate.toLocaleString("en-US", { timeZone: MX_TZ })).getDay();
             const startHour = new Date(startDate.toLocaleString("en-US", { timeZone: MX_TZ })).getHours();
             const endHour = new Date(endDate.toLocaleString("en-US", { timeZone: MX_TZ })).getHours();
-            // Only show slots at least 3 hours after current time
-            const now = new Date();
-            const threeHoursFromNow = new Date(now.getTime() + 3 * 60 * 60 * 1000);
-            if (startDate <= threeHoursFromNow) return false;
             if (dayOfWeek === 0 || dayOfWeek === 6) {
                 // Weekend: 11-4 (11:00 to 16:59)
                 return startHour >= 11 && endHour <= 17;
@@ -62,16 +58,13 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
             // Convert UTC times to user's local timezone for display
             const start = new Date(slot.start);
             const end = new Date(slot.end);
-            // Show only time range, not date
-            return `${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            return `${start.toLocaleString()} - ${end.toLocaleString()}`;
         };
 
-        // Format day header: weekday name + date
-        const formatDayHeader = (dateStr: string): string => {
+        // Helper to format day date (add this if missing)
+        const formatDayDate = (dateStr: string): string => {
             const date = new Date(dateStr);
-            const weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
-            const formattedDate = date.toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' });
-            return `${weekday}, ${formattedDate}`;
+            return date.toLocaleDateString();
         };
 
         const handleSlotClick = (slot: TimeSlot) => {
@@ -84,7 +77,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
                     const filteredSlots = day.slots.filter(isSlotAllowed);
                     return (
                         <div key={day.date} className="day-column">
-                            <div className="day-header">{formatDayHeader(day.date)}</div>
+                            <div className="day-header">{formatDayDate(day.date)}</div>
                             <div className="day-slots">
                                 {filteredSlots.length > 0 ? (
                                     filteredSlots.map((slot, index) => (
@@ -93,7 +86,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
                                             type="button"
                                             className={`time-slot-button ${isSlotSelected(slot) ? 'selected' : ''}`}
                                             onClick={() => handleSlotClick(slot)}
-                                            aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayHeader(day.date)}`}
+                                            aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayDate(day.date)}`}
                                         >
                                             {formatTimeSlot(slot)}
                                         </button>
