@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./AvailabilityCalendar.css";
 import { AvailabilityPayload, TimeSlot } from "../types";
+
+// Diagnostic: log when AvailabilityCalendar re-renders and why
+const renderCount = { current: 0 };
+
+function useRenderDiagnostics(props: any) {
+    React.useEffect(() => {
+        renderCount.current++;
+        // Log prop changes for diagnostics
+        console.log(
+            `[AvailabilityCalendar] Render #${renderCount.current}`,
+            {
+                availability: props.availability,
+                selectedSlot: props.selectedSlot,
+                onSlotSelect: props.onSlotSelect,
+            }
+        );
+    });
+}
 
 interface AvailabilityCalendarProps {
     availability: AvailabilityPayload;
@@ -8,99 +26,81 @@ interface AvailabilityCalendarProps {
     onSlotSelect: (slot: TimeSlot) => void;
 }
 
-const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
-    availability,
-    selectedSlot,
-    onSlotSelect
-}) => {
-    // Only log once when component actually re-renders
-    console.log("[AvailabilityCalendar] Rendered once with:", {
-        days: availability.days.length,
-        selectedSlot,
-    });
+// Move the slot click handler inside the component and use props.onSlotSelect
+const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
+    (props) => {
+        useRenderDiagnostics(props);
+        const { availability, selectedSlot, onSlotSelect } = props;
 
-    // Helper to check if a slot is within allowed hours in Mexico City time
-    const isSlotAllowed = (slot: TimeSlot): boolean => {
-        const MX_TZ = "America/Mexico_City";
-        const startDate = new Date(slot.start);
-        const endDate = new Date(slot.end);
-        const dayOfWeek = new Date(startDate.toLocaleString("en-US", { timeZone: MX_TZ })).getDay();
-        const startHour = new Date(startDate.toLocaleString("en-US", { timeZone: MX_TZ })).getHours();
-        const endHour = new Date(endDate.toLocaleString("en-US", { timeZone: MX_TZ })).getHours();
-        if (dayOfWeek === 0 || dayOfWeek === 6) {
-            return startHour >= 11 && endHour <= 17; // Weekend: 11–4
-        } else {
-            return startHour >= 9 && endHour <= 17; // Weekday: 9–5
-        }
-    };
+        // Helper to check if a slot is within allowed hours in Mexico City time
+        const isSlotAllowed = (slot: TimeSlot): boolean => {
+            const MX_TZ = "America/Mexico_City";
+            const startDate = new Date(slot.start);
+            const endDate = new Date(slot.end);
+            const dayOfWeek = new Date(startDate.toLocaleString("en-US", { timeZone: MX_TZ })).getDay();
+            const startHour = new Date(startDate.toLocaleString("en-US", { timeZone: MX_TZ })).getHours();
+            const endHour = new Date(endDate.toLocaleString("en-US", { timeZone: MX_TZ })).getHours();
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                // Weekend: 11-4 (11:00 to 16:59)
+                return startHour >= 11 && endHour <= 17;
+            } else {
+                // Weekday: 9-5 (9:00 to 16:59)
+                return startHour >= 9 && endHour <= 17;
+            }
+        };
 
-    const isSlotSelected = (slot: TimeSlot): boolean =>
-        selectedSlot !== null &&
-        selectedSlot.start === slot.start &&
-        selectedSlot.end === slot.end;
+        const isSlotSelected = (slot: TimeSlot): boolean =>
+            selectedSlot !== null &&
+            selectedSlot.start === slot.start &&
+            selectedSlot.end === slot.end;
 
-    const formatTimeSlot = (slot: TimeSlot): string => {
-        const startDate = new Date(slot.start);
-        const endDate = new Date(slot.end);
-        const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const formatTimeSlot = (slot: TimeSlot): string => {
+            // Convert UTC times to user's local timezone for display
+            const start = new Date(slot.start);
+            const end = new Date(slot.end);
+            return `${start.toLocaleString()} - ${end.toLocaleString()}`;
+        };
 
-        const start = startDate.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZone: userTimezone
-        });
-        const end = endDate.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZone: userTimezone
-        });
-        return `${start} - ${end}`;
-    };
+        // Helper to format day date (add this if missing)
+        const formatDayDate = (dateStr: string): string => {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString();
+        };
 
-    const formatDayDate = (dateStr: string): string => {
-        const [year, month, day] = dateStr.split('-').map(Number);
-        const date = new Date(year, month - 1, day);
-        return date.toLocaleDateString([], {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric'
-        });
-    };
+        const handleSlotClick = (slot: TimeSlot) => {
+            onSlotSelect(slot);
+        };
 
-    const handleSlotClick = (slot: TimeSlot) => {
-        onSlotSelect(slot);
-    };
-
-    return (
-        <div className="availability-calendar">
-            {availability.days.map((day) => {
-                const filteredSlots = day.slots.filter(isSlotAllowed);
-                return (
-                    <div key={day.date} className="day-column">
-                        <div className="day-header">{formatDayDate(day.date)}</div>
-                        <div className="day-slots">
-                            {filteredSlots.length > 0 ? (
-                                filteredSlots.map((slot, index) => (
-                                    <button
-                                        key={`${day.date}-${index}`}
-                                        type="button"
-                                        className={`time-slot-button ${isSlotSelected(slot) ? 'selected' : ''}`}
-                                        onClick={() => handleSlotClick(slot)}
-                                        aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayDate(day.date)}`}
-                                    >
-                                        {formatTimeSlot(slot)}
-                                    </button>
-                                ))
-                            ) : (
-                                <div className="no-availability">No availability</div>
-                            )}
+        return (
+            <div className="availability-calendar">
+                {availability.days.map((day) => {
+                    const filteredSlots = day.slots.filter(isSlotAllowed);
+                    return (
+                        <div key={day.date} className="day-column">
+                            <div className="day-header">{formatDayDate(day.date)}</div>
+                            <div className="day-slots">
+                                {filteredSlots.length > 0 ? (
+                                    filteredSlots.map((slot, index) => (
+                                        <button
+                                            key={`${day.date}-${index}`}
+                                            type="button"
+                                            className={`time-slot-button ${isSlotSelected(slot) ? 'selected' : ''}`}
+                                            onClick={() => handleSlotClick(slot)}
+                                            aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayDate(day.date)}`}
+                                        >
+                                            {formatTimeSlot(slot)}
+                                        </button>
+                                    ))
+                                ) : (
+                                    <div className="no-availability">No availability</div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                );
-            })}
-        </div>
-    );
-};
+                    );
+                })}
+            </div>
+        );
+    }
+);
 
-// 🔒 Memoize to prevent re-rendering unless props actually change
 export default React.memo(AvailabilityCalendar);
