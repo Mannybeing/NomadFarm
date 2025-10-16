@@ -126,4 +126,4 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
     );
 };
 
-export default AvailabilityCalendar;
+export default React.memo(AvailabilityCalendar);
