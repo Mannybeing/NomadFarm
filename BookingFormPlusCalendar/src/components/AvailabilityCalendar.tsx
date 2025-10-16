@@ -62,13 +62,16 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
             // Convert UTC times to user's local timezone for display
             const start = new Date(slot.start);
             const end = new Date(slot.end);
-            return `${start.toLocaleString()} - ${end.toLocaleString()}`;
+            // Show only time range, not date
+            return `${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
         };
 
-        // Helper to format day date (add this if missing)
-        const formatDayDate = (dateStr: string): string => {
+        // Format day header: weekday name + date
+        const formatDayHeader = (dateStr: string): string => {
             const date = new Date(dateStr);
-            return date.toLocaleDateString();
+            const weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
+            const formattedDate = date.toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' });
+            return `${weekday}, ${formattedDate}`;
         };
 
         const handleSlotClick = (slot: TimeSlot) => {
@@ -81,7 +84,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
                     const filteredSlots = day.slots.filter(isSlotAllowed);
                     return (
                         <div key={day.date} className="day-column">
-                            <div className="day-header">{formatDayDate(day.date)}</div>
+                            <div className="day-header">{formatDayHeader(day.date)}</div>
                             <div className="day-slots">
                                 {filteredSlots.length > 0 ? (
                                     filteredSlots.map((slot, index) => (
@@ -90,7 +93,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
                                             type="button"
                                             className={`time-slot-button ${isSlotSelected(slot) ? 'selected' : ''}`}
                                             onClick={() => handleSlotClick(slot)}
-                                            aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayDate(day.date)}`}
+                                            aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayHeader(day.date)}`}
                                         >
                                             {formatTimeSlot(slot)}
                                         </button>
