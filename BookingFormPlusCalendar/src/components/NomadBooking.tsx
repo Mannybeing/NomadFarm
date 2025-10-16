@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import AvailabilityCalendar from "./AvailabilityCalendar";
 import {
     BookingData,
@@ -414,6 +414,7 @@ const getCountryFullName = (countryCode: string): string => {
         "QA": "🇶🇦 QA +974",
         "RE": "🇷🇪 RE +262",
         "RO": "🇷🇴 RO +40",
+        "RS": "🇷🇸 RS +381",
         "RU": "🇷🇺 RU +7",
         "RW": "🇷🇼 RW +250",
         "BL": "🇧🇱 BL +590",
@@ -428,7 +429,6 @@ const getCountryFullName = (countryCode: string): string => {
         "ST": "🇸🇹 ST +239",
         "SA": "🇸🇦 SA +966",
         "SN": "🇸🇳 SN +221",
-        "RS": "🇷🇸 RS +381",
         "SC": "🇸🇨 SC +248",
         "SL": "🇸🇱 SL +232",
         "SG": "🇸🇬 SG +65",
@@ -503,9 +503,7 @@ export default function NomadBooking() {
     });
 
     const [errors, setErrors] = useState<BookingErrors>({});
-    const [availability, setAvailability] = useState<AvailabilityPayload | null>(
-        null
-    );
+    const [availability, setAvailability] = useState<AvailabilityPayload | null>(null);
     const [loadingAvail, setLoadingAvail] = useState<boolean>(false);
     const [availError, setAvailError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
@@ -513,18 +511,18 @@ export default function NomadBooking() {
 
     const [viewDate, setViewDate] = useState<Date>(new Date());
 
-    const update = <K extends keyof BookingData>(key: K, value: BookingData[K]) => {
+    // Stable update function to avoid changing reference every render
+    const update = useCallback(<K extends keyof BookingData>(key: K, value: BookingData[K]) => {
         setData((prev) => ({ ...prev, [key]: value }));
-        if (errors[key]) {
-            setErrors((prev) => {
-                const c = { ...prev };
-                delete c[key];
-                return c;
-            });
-        }
-    };
+        setErrors((prev) => {
+            if (!prev[key]) return prev;
+            const c = { ...prev };
+            delete c[key];
+            return c;
+        });
+    }, []);
 
-    const fetchMonthlyAvailability = async (year: number, month: number) => {
+    const fetchMonthlyAvailability = useCallback(async (year: number, month: number) => {
         setLoadingAvail(true);
         setAvailError(null);
         try {
@@ -577,13 +575,13 @@ export default function NomadBooking() {
         } finally {
             setLoadingAvail(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         const y = viewDate.getFullYear();
         const m = viewDate.getMonth() + 1;
         fetchMonthlyAvailability(y, m);
-    }, [viewDate]);
+    }, [viewDate, fetchMonthlyAvailability]);
 
     const changeMonth = (direction: number) => {
         setViewDate((prev) => {
@@ -596,6 +594,11 @@ export default function NomadBooking() {
     // Function to format timezone names for display
     const formatTimezoneDisplay = (timezone: string) => {
         return timezone.replace(/_/g, ' ');
+    };
+
+    // Handler for selecting a slot in the calendar
+    const handleSlotSelect = (slot: TimeSlot | null) => {
+        update("selectedSlot", slot);
     };
 
     const validate = (): boolean => {
@@ -740,13 +743,13 @@ export default function NomadBooking() {
                                     {countryDropdownOpen && (
                                         <div className="custom-country-dropdown">
                                             {[
-                                                'BR', 'AD', 'AE', 'AF', 'AL', 'AM', 'AN', 'AO', 'AR', 'AT', 'AU', 'AZ', 'BA', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BN', 'BO', 'BT', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET', 'FK', 'FI', 'FJ', 'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GH', 'GI', 'GL', 'GM', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GY', 'HK', 'HM', 'HN', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KN', 'KP', 'KR', 'KW', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NZ', 'OM', 'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU', 'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'ST', 'SV', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF', 'WS', 'YE', 'YT', 'ZA', 'ZM', 'ZW'
+                                                'BR', 'AD', 'AE', 'AF', 'AL', 'AM', 'AN', 'AO', 'AR', 'AT', 'AU', 'AZ', 'BA', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BN', 'BO', 'BT', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET', 'FK', 'FI', 'FJ', 'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GH', 'GI', 'GL', 'GM', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GY', 'HK', 'HM', 'HN', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KN', 'KP', 'KR', 'KW', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NZ', 'OM', 'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU', 'RW', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'ST', 'SV', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF', 'WS', 'YE', 'YT', 'ZA', 'ZM', 'ZW'
                                             ].map(code => (
                                                 <div
                                                     key={code}
                                                     className="custom-country-option"
                                                     onClick={() => {
-                                                        update("countryCode", code);
+                                                        update("countryCode", code as BookingData["countryCode"]);
                                                         setCountryDropdownOpen(false);
                                                     }}
                                                 >
@@ -959,7 +962,7 @@ export default function NomadBooking() {
                                 <AvailabilityCalendar
                                     availability={availability}
                                     selectedSlot={data.selectedSlot}
-                                    onSlotSelect={(slot: TimeSlot) => update("selectedSlot", slot)}
+                                    onSlotSelect={handleSlotSelect}
                                 />
                                 {errors.selectedSlot && (
                                     <div className="error-text">{errors.selectedSlot}</div>
