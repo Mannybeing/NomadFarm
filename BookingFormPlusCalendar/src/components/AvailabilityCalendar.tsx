@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./AvailabilityCalendar.css";
 import { AvailabilityPayload, TimeSlot } from "../types";
 
@@ -33,7 +33,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
         const { availability, selectedSlot, onSlotSelect } = props;
 
         // Helper to check if a slot is within allowed hours in Mexico City time
-        const isSlotAllowed = (slot: TimeSlot): boolean => {
+        const isSlotAllowed = React.useCallback((slot: TimeSlot): boolean => {
             const MX_TZ = "America/Mexico_City";
             const startDate = new Date(slot.start);
             const endDate = new Date(slot.end);
@@ -47,57 +47,64 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = React.memo(
                 // Weekday: 9-5 (9:00 to 16:59)
                 return startHour >= 9 && endHour <= 17;
             }
-        };
+        }, []);
 
         const isSlotSelected = (slot: TimeSlot): boolean =>
             selectedSlot !== null &&
             selectedSlot.start === slot.start &&
             selectedSlot.end === slot.end;
 
-        const formatTimeSlot = (slot: TimeSlot): string => {
-            // Convert UTC times to user's local timezone for display
+        const formatTimeSlot = React.useCallback((slot: TimeSlot): string => {
+            // Show only time, not date, in user's local timezone
             const start = new Date(slot.start);
             const end = new Date(slot.end);
-            return `${start.toLocaleString()} - ${end.toLocaleString()}`;
-        };
+            return `${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        }, []);
 
-        // Helper to format day date (add this if missing)
-        const formatDayDate = (dateStr: string): string => {
+        // Helper to format day date (show weekday and date in user's local timezone)
+        const formatDayDate = React.useCallback((dateStr: string): string => {
             const date = new Date(dateStr);
-            return date.toLocaleDateString();
-        };
+            const weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
+            const formattedDate = date.toLocaleDateString();
+            return `${weekday}, ${formattedDate}`;
+        }, []);
 
         const handleSlotClick = (slot: TimeSlot) => {
             onSlotSelect(slot);
         };
 
+        // Memoize filtered slots for all days at the top level
+        const filteredSlotsByDay = useMemo(() => {
+            return availability.days.map(day => ({
+                date: day.date,
+                slots: day.slots.filter(isSlotAllowed)
+            }));
+        }, [availability.days, isSlotAllowed]);
+
         return (
             <div className="availability-calendar">
-                {availability.days.map((day) => {
-                    const filteredSlots = day.slots.filter(isSlotAllowed);
-                    return (
-                        <div key={day.date} className="day-column">
-                            <div className="day-header">{formatDayDate(day.date)}</div>
-                            <div className="day-slots">
-                                {filteredSlots.length > 0 ? (
-                                    filteredSlots.map((slot, index) => (
-                                        <button
-                                            key={`${day.date}-${index}`}
-                                            type="button"
-                                            className={`time-slot-button ${isSlotSelected(slot) ? 'selected' : ''}`}
-                                            onClick={() => handleSlotClick(slot)}
-                                            aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayDate(day.date)}`}
-                                        >
-                                            {formatTimeSlot(slot)}
-                                        </button>
-                                    ))
-                                ) : (
-                                    <div className="no-availability">No availability</div>
-                                )}
-                            </div>
+                {filteredSlotsByDay.map((day) => (
+                    <div key={day.date} className="day-column">
+                        <div className="day-header">{formatDayDate(day.date)}</div>
+                        <div className="day-slots">
+                            {day.slots.length > 0 ? (
+                                day.slots.map((slot, index) => (
+                                    <button
+                                        key={`${day.date}-${index}`}
+                                        type="button"
+                                        className={`time-slot-button ${isSlotSelected(slot) ? 'selected' : ''}`}
+                                        onClick={() => handleSlotClick(slot)}
+                                        aria-label={`Book slot ${formatTimeSlot(slot)} on ${formatDayDate(day.date)}`}
+                                    >
+                                        {formatTimeSlot(slot)}
+                                    </button>
+                                ))
+                            ) : (
+                                <div className="no-availability">No availability</div>
+                            )}
                         </div>
-                    );
-                })}
+                    </div>
+                ))}
             </div>
         );
     }
