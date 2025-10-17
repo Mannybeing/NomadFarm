@@ -507,7 +507,6 @@ export default function NomadBooking() {
     const [loadingAvail, setLoadingAvail] = useState<boolean>(false);
     const [availError, setAvailError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const [submitted, setSubmitted] = useState<boolean>(false);
 
     const [viewDate, setViewDate] = useState<Date>(new Date());
 
@@ -664,7 +663,7 @@ export default function NomadBooking() {
                 console.error("createBooking failed:", res.status, txt);
                 throw new Error(txt || `HTTP ${res.status}`);
             }
-            setSubmitted(true);
+            window.location.href = "https://www.nomadfarm.co/tudo-e-arte-2/booking-confirmed";
         } catch (err: any) {
             console.error("[Booking] submit error:", err);
             setErrors((prev) => ({ ...prev, form: err.message || "Submission failed" }));
@@ -673,19 +672,13 @@ export default function NomadBooking() {
         }
     };
 
-    if (submitted) {
-        return (
-            <div className="booking-container">
-                <h2>Success!</h2>
-                <p>Your booking is confirmed.</p>
-            </div>
-        );
-    }
+
+    // No local success message; user will be redirected on submit
 
     return (
         <div className="booking-container">
             <h1>Basic Info</h1>
-            <p className="subtitle">Reserve your spot for the November Immersion!</p>
+            <p className="subtitle">Reserve your spot for Nomad Farm!</p>
             <form onSubmit={handleSubmit}>
                 <div className="form-columns">
                     <div className="left-column">
@@ -863,7 +856,9 @@ export default function NomadBooking() {
                                 onChange={(e) => update("experience", e.target.value)}
                             >
                                 <option value="">Select...</option>
-                                <option value="November 2025">November 2025</option>
+                                <option value="Tudo É Arte November 2025">Tudo É Arte November 2025</option>
+                                <option value="Tudo É Arte January 2026">Tudo É Arte January 2026</option>
+                                <option value="Tudo É Arte March 2026">Tudo É Arte March 2026</option>
                             </select>
                             {errors.experience && <div className="error-text">{errors.experience}</div>}
                         </div>
@@ -974,7 +969,7 @@ export default function NomadBooking() {
                         )}
 
                         <button type="submit" disabled={submitting}>
-                            {submitting ? "Submitting…" : "Secure Your November Spot"}
+                            {submitting ? "Submitting…" : "Book Now"}
                         </button>
                     </div>
                 </div>
