@@ -29,8 +29,6 @@ export interface BookingData {
     paymentOption: string;
     alternativePricing: string;
     about: string;
-    workSchedule: string;
-    mailingList: boolean;
     selectedSlot: TimeSlot | null;
 }
 
@@ -50,8 +48,6 @@ export interface BookingErrors {
     paymentOption?: string;
     alternativePricing?: string;
     about?: string;
-    workSchedule?: string;
-    mailingList?: string;
     selectedSlot?: string;
     form?: string;
 }
