@@ -1,3 +1,20 @@
+/* Fix input/textarea focus background and text color for mobile and desktop */
+.booking-container input[type="text"]:focus,
+.booking-container input[type="email"]:focus,
+.booking-container input[type="tel"]:focus,
+.booking-container textarea:focus,
+.booking-container input[type="text"]:active,
+.booking-container input[type="email"]:active,
+.booking-container input[type="tel"]:active,
+.booking-container textarea:active {
+    background-color: #F5EDD0 !important;
+    /* match your custom color */
+    color: #763F24 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px #c9a16b33 !important;
+    /* optional: subtle focus ring */
+}
+
 /* NomadBooking.css - Earthy Nomad Farm Design with Two-Column Layout */
 
 /* Ensure body background matches */
@@ -1521,6 +1538,122 @@ button[type="submit"]:disabled {
     }
 }
 
+/* --- Custom Multi-Select: Which week(s)? --- */
+.custom-select {
+    position: relative;
+    /* needed for arrow positioning */
+    min-height: 56px;
+    /* prevents “skinny” field */
+    padding: 8px 48px 8px 24px;
+    /* space for arrow on the right */
+    border: 3px solid #763F24;
+    border-radius: 25px;
+    background-color: #F5EDD0;
+    color: #763F24;
+    display: flex;
+    align-items: center;
+    /* keeps placeholder vertically centered */
+}
+
+.custom-select {
+    position: relative !important;
+    width: 100% !important;
+    background-color: #F5EDD0 !important;
+    border: 2px solid #763F24 !important;
+    border-radius: 25px !important;
+    padding: 16px 50px 16px 20px !important;
+    color: #763F24 !important;
+    font-family: 'SoilMates', sans-serif !important;
+    font-size: 1.3rem !important;
+    line-height: 1.5 !important;
+    box-shadow: none !important;
+    /* Remove all shadow */
+    display: flex !important;
+    align-items: center !important;
+    min-height: 56px !important;
+    box-sizing: border-box !important;
+}
+
+.custom-select span {
+    background-color: #F5EDD0 !important;
+    /* exact same beige */
+    border: 2px solid #763F24 !important;
+    border-radius: 18px !important;
+    padding: 8px 16px !important;
+    font-weight: 700 !important;
+    color: #763F24 !important;
+    font-size: 1.1rem !important;
+    margin: 4px 8px 4px 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+/* Dropdown menu styling */
+.custom-select-dropdown {
+    position: absolute !important;
+    top: calc(100% + 6px) !important;
+    left: 0 !important;
+    width: 100% !important;
+    background-color: #F5EDD0 !important;
+    /* beige instead of white */
+    border: 2px solid #763F24 !important;
+    border-radius: 25px !important;
+    z-index: 10 !important;
+    box-shadow: 0 4px 12px rgba(118, 63, 36, 0.15) !important;
+    overflow: hidden !important;
+}
+
+.custom-select-dropdown {
+    position: absolute !important;
+    top: calc(100% + 6px) !important;
+    left: 0 !important;
+    width: 100% !important;
+    background-color: #F5EDD0 !important;
+    border: 3px solid #763F24 !important;
+    border-radius: 25px !important;
+    box-shadow: none !important;
+    /* No shadows */
+    z-index: 20 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+}
+
+/* Individual dropdown items */
+.custom-select-dropdown div {
+    padding: 12px 24px !important;
+    cursor: pointer !important;
+    color: #763F24 !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    background-color: #F5EDD0 !important;
+    /* ensure full beige coverage */
+    transition: background-color 0.2s ease !important;
+}
+
+.custom-select-dropdown div {
+    padding: 20px 24px !important;
+    font-size: 1.2rem !important;
+    color: #763F24 !important;
+    background-color: #F5EDD0 !important;
+    border-bottom: 1px solid rgba(118, 63, 36, 0.2) !important;
+    cursor: pointer !important;
+    font-family: 'SoilMates', sans-serif !important;
+}
+
+/* Hover state matches your earthy tone */
+.custom-select-dropdown div:hover {
+    background-color: #E5D7B8 !important;
+}
+
+.custom-select-dropdown div:hover {
+    background-color: #E5D7B8 !important;
+}
+
+/* Optional: focus or open state depth effect */
+.custom-select:focus-within {
+    box-shadow: 0 0 0 3px rgba(118, 63, 36, 0.15) !important;
+}
+
 /* FINAL OVERRIDE - REDUCE FORM SPACING ON MOBILE */
 @media screen and (max-width: 768px) {
 
@@ -1548,4 +1681,132 @@ button[type="submit"]:disabled {
     .booking-container form input[type="tel"] {
         text-align: center !important;
     }
+}
+
+/* --- FINAL FIX: Ensure dropdown list matches beige background (#F5EDD0) --- */
+.custom-select-dropdown,
+.custom-select-dropdown div,
+.custom-select-dropdown div:hover {
+    background-color: #F5EDD0 !important;
+}
+
+/* Also ensure no system default white remains */
+.custom-select-dropdown::before,
+.custom-select-dropdown::after {
+    background-color: #F5EDD0 !important;
+}
+
+/* Force border color consistency */
+.custom-select-dropdown {
+    border: 3px solid #763F24 !important;
+    border-radius: 25px !important;
+    box-shadow: 0 4px 12px rgba(118, 63, 36, 0.15) !important;
+}
+
+/* Optional: add slight depth when open */
+.custom-select.open,
+.custom-select:focus-within {
+    background-color: #F5EDD0 !important;
+    box-shadow: 0 0 0 3px rgba(118, 63, 36, 0.1) !important;
+}
+
+.dropdown-arrow {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 1.6rem;
+    color: #763F24;
+    background: transparent;
+    /* remove green */
+    border: none;
+    /* optional, match your style */
+    border-radius: 14px;
+    padding: 2px 10px;
+    line-height: 1;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.dropdown-arrow {
+    position: absolute !important;
+    top: 50% !important;
+    right: 18px !important;
+    transform: translateY(-50%) !important;
+    color: #763F24 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 1.4rem !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.dropdown-arrow:active,
+.dropdown-arrow:focus {
+    background: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.dropdown-arrow:focus,
+.dropdown-arrow:active {
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    /* keep transparent on press */
+}
+
+
+.chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.custom-select-pill {
+    background-color: #F5EDD0;
+    border: 2px solid #763F24;
+    border-radius: 18px;
+    padding: 8px 16px;
+    font-weight: 700;
+    color: #763F24;
+    display: inline-flex;
+    align-items: center;
+}
+
+.custom-select-pill {
+    background: #F5EDD0 !important;
+    border: 2px solid #763F24 !important;
+    border-radius: 18px !important;
+    padding: 8px 14px !important;
+    color: #763F24 !important;
+    font-weight: 700 !important;
+}
+
+.pill-close {
+    margin-left: 10px;
+    background: none;
+    border: none;
+    color: #763F24;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.pill-close {
+    background: none !important;
+    border: none !important;
+    color: #763F24 !important;
+    cursor: pointer !important;
+    margin-left: 8px !important;
+    font-weight: bold !important;
+}
+
+.placeholder-text {
+    color: #b79e7f;
+    font-style: italic;
+    opacity: .85;
+    font-size: 1.2rem;
 }
