@@ -45,6 +45,8 @@ export interface BookingErrors {
     firstTime?: string;
     roomInterest?: string;
     experience?: string;
+    experienceType?: string;
+    experienceOption?: string;
     paymentOption?: string;
     alternativePricing?: string;
     about?: string;
