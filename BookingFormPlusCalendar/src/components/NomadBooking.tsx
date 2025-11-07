@@ -643,7 +643,7 @@ export default function NomadBooking() {
         if (!data.firstTime.trim()) e.firstTime = "Required";
         if (!data.roomInterest.trim()) e.roomInterest = "Required";
         // New experience type validation
-        if (!experienceType) e.experienceType = "Required";
+        if (!experienceType) e.experience = "Required";
         if (experienceType === "immersion" && !experienceOption) e.experienceOption = "Required";
         if (experienceType === "coliving" && colivingWeeks.length === 0) e.experienceOption = "Select at least one week";
         if (!data.paymentOption.trim()) e.paymentOption = "Required";
