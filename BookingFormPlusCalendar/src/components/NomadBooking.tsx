@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import AvailabilityCalendar from "./AvailabilityCalendar";
 import {
     BookingData,
@@ -7,6 +7,18 @@ import {
     TimeSlot,
 } from "../types";
 import "../styles/NomadBooking.css";
+
+// Helper to display week label
+function weekLabel(week: string) {
+    switch (week) {
+        case "dec-week-1": return "Tudo E Arte Week 1 (Nov 30 - Dec 7)";
+        case "dec-week-2": return "Tudo E Arte Week 2 (Dec 7 - Dec 14)";
+        case "dec-week-3": return "Tudo E Arte Week 3 (Dec 14 - Dec 21)";
+        case "dec-week-4": return "Tudo E Arte Week 4 (Dec 21 - Dec 28)";
+        case "dec-week-5": return "Tudo E Arte Week 5 (Dec 28 - Jan 4)";
+        default: return week;
+    }
+}
 
 // Azure Functions backend URL configuration
 const BACKEND =
@@ -504,7 +516,19 @@ export default function NomadBooking() {
         alternativePricing: "",
         about: "",
         selectedSlot: null,
+        // Add new fields for experience type and option
     });
+    const [experienceType, setExperienceType] = useState<string>("");
+    const [experienceOption, setExperienceOption] = useState<string>("");
+    const [colivingWeeks, setColivingWeeks] = useState<string[]>([]);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const weekOptions = [
+        "dec-week-1",
+        "dec-week-2",
+        "dec-week-3",
+        "dec-week-4",
+        "dec-week-5"
+    ];
 
     const [errors, setErrors] = useState<BookingErrors>({});
     const [availability, setAvailability] = useState<AvailabilityPayload | null>(null);
@@ -618,7 +642,10 @@ export default function NomadBooking() {
         }
         if (!data.firstTime.trim()) e.firstTime = "Required";
         if (!data.roomInterest.trim()) e.roomInterest = "Required";
-        if (!data.experience.trim()) e.experience = "Required";
+        // New experience type validation
+        if (!experienceType) e.experienceType = "Required";
+        if (experienceType === "immersion" && !experienceOption) e.experienceOption = "Required";
+        if (experienceType === "coliving" && colivingWeeks.length === 0) e.experienceOption = "Select at least one week";
         if (!data.paymentOption.trim()) e.paymentOption = "Required";
         if (!data.alternativePricing.trim()) e.alternativePricing = "Required";
         if (!data.about.trim()) e.about = "Required";
@@ -636,10 +663,12 @@ export default function NomadBooking() {
 
     const handleSubmit = async (ev: React.FormEvent) => {
         ev.preventDefault();
+
         if (!validate()) {
             console.warn("[Booking] Validation errors:", errors);
             return;
         }
+
         setSubmitting(true);
         setErrors((prev) => {
             const cp = { ...prev };
@@ -649,20 +678,30 @@ export default function NomadBooking() {
 
         try {
             // Get user's timezone using the same method as the calendar
-            let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
             // Format WhatsApp number as countryCode+phoneNumber (e.g., +558295537516)
             const dialCode = getCountryDialCode(data.countryCode);
             let formattedWhatsapp = data.whatsapp.replace(/\D/g, ""); // remove non-digits
-            // Remove leading zeros from phone number
-            formattedWhatsapp = formattedWhatsapp.replace(/^0+/, "");
+            formattedWhatsapp = formattedWhatsapp.replace(/^0+/, ""); // remove leading zeros
             const whatsappFull = `${dialCode}${formattedWhatsapp}`;
 
+            // Build booking payload
             const bookingDataWithTimezone = {
                 ...data,
                 whatsapp: whatsappFull,
-                userTimezone: userTimezone
+                userTimezone,
+                experienceType,
+                experienceOption:
+                    experienceType === "immersion" ? experienceOption : undefined,
+                colivingWeeks:
+                    experienceType === "coliving" ? colivingWeeks : undefined,
+                colivingWeeksCount:
+                    experienceType === "coliving"
+                        ? `|${colivingWeeks.length}`
+                        : undefined,
             };
+
             // Send booking data to backend, which will forward to Zapier
             const url = `${BACKEND}/api/createBooking`;
             const res = await fetch(url, {
@@ -670,19 +709,51 @@ export default function NomadBooking() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bookingDataWithTimezone),
             });
+
             if (!res.ok) {
                 const txt = await res.text();
                 console.error("createBooking failed:", res.status, txt);
                 throw new Error(txt || `HTTP ${res.status}`);
             }
-            window.location.href = "https://www.nomadfarm.co/tudo-e-arte-2/booking-confirmed";
+
+            window.location.href =
+                "https://www.nomadfarm.co/tudo-e-arte-2/booking-confirmed";
         } catch (err: any) {
             console.error("[Booking] submit error:", err);
-            setErrors((prev) => ({ ...prev, form: err.message || "Submission failed" }));
+            setErrors((prev) => ({
+                ...prev,
+                form: err.message || "Submission failed",
+            }));
         } finally {
             setSubmitting(false);
         }
     };
+
+
+    const selectRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handleDown = (e: MouseEvent) => {
+            if (selectRef.current && !selectRef.current.contains(e.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleDown);
+        return () => document.removeEventListener("mousedown", handleDown);
+    }, []);
+
+    const weeksRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handleMouseDown = (e: MouseEvent) => {
+            if (weeksRef.current && !weeksRef.current.contains(e.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleMouseDown);
+        return () => document.removeEventListener("mousedown", handleMouseDown);
+    }, []);
+
 
 
     // No local success message; user will be redirected on submit
@@ -852,19 +923,110 @@ export default function NomadBooking() {
                             )}
                         </div>
 
+                        {/* Experience Type Select */}
                         <div className="form-group">
-                            <label>Which experience are you applying for? <span className="required">*</span></label>
+                            <label>Are you applying for an immersion or a co-living experience? <span className="required">*</span></label>
                             <select
-                                value={data.experience}
-                                onChange={(e) => update("experience", e.target.value)}
+                                value={experienceType}
+                                onChange={e => { setExperienceType(e.target.value); setExperienceOption(""); }}
                             >
                                 <option value="">Select...</option>
-                                <option value="Tudo É Arte November 2025">Tudo É Arte November 2025</option>
-                                <option value="Tudo É Arte January 2026">Tudo É Arte January 2026</option>
-                                <option value="Tudo É Arte March 2026">Tudo É Arte March 2026</option>
+                                <option value="immersion">Immersion</option>
+                                <option value="coliving">Co-living</option>
                             </select>
-                            {errors.experience && <div className="error-text">{errors.experience}</div>}
+                            {errors.experienceType && <div className="error-text">{errors.experienceType}</div>}
                         </div>
+                        {/* Conditional Experience Option Select */}
+                        {experienceType === "immersion" && (
+                            <div className="form-group">
+                                <label>Which immersion? <span className="required">*</span></label>
+                                <select
+                                    value={experienceOption}
+                                    onChange={e => setExperienceOption(e.target.value)}
+                                >
+                                    <option value="">Select...</option>
+                                    <option value="tudo-arte-jan">Tudo E Arte January</option>
+                                    <option value="tudo-arte-mar">Tudo E Arte March</option>
+                                </select>
+                                {errors.experienceOption && <div className="error-text">{errors.experienceOption}</div>}
+                            </div>
+                        )}
+
+                        {experienceType === "coliving" && (
+                            <div className="form-group" style={{ position: "relative" }} ref={weeksRef}>
+                                <label>Which week(s)? <span className="required">*</span></label>
+
+                                <div
+                                    ref={selectRef}
+                                    className={`custom-select ${dropdownOpen ? "open" : ""}`}
+                                    onMouseDown={(e) => {
+                                        e.stopPropagation();
+                                        if (!dropdownOpen) setDropdownOpen(true);
+                                    }}
+                                >
+
+
+                                    {/* Keep chips + placeholder INSIDE the custom-select */}
+                                    <div className="chips-container">
+                                        {colivingWeeks.map((week) => (
+                                            <span key={week} className="custom-select-pill">
+                                                {weekLabel(week)}
+                                                <button
+                                                    type="button"
+                                                    className="pill-close"
+                                                    onMouseDown={(e) => {
+                                                        e.preventDefault();
+                                                        setColivingWeeks(colivingWeeks.filter((w) => w !== week));
+                                                    }}
+                                                    aria-label={`Remove ${weekLabel(week)}`}
+                                                >
+                                                    ×
+                                                </button>
+                                            </span>
+                                        ))}
+
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        className="dropdown-arrow"
+                                        aria-expanded={dropdownOpen}
+                                        aria-label="Toggle weeks menu"
+                                        onMouseDown={(e) => {
+                                            e.stopPropagation();        // don’t trigger wrapper onClick
+                                            setDropdownOpen((v) => !v); // toggle open/close
+                                        }}
+                                    >
+                                        ▼
+                                    </button>
+                                </div>
+
+                                {dropdownOpen && (
+                                    <div className="custom-select-dropdown">
+                                        {weekOptions
+                                            .filter((w) => !colivingWeeks.includes(w))
+                                            .map((w) => (
+                                                <div
+                                                    key={w}
+                                                    className="custom-select-option"
+                                                    onMouseDown={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        setColivingWeeks((prev) => [...prev, w]);
+                                                        setDropdownOpen(true); // explicitly keep it open
+                                                    }}
+                                                >
+                                                    {weekLabel(w)}
+                                                </div>
+                                            ))}
+                                        {weekOptions.filter((w) => !colivingWeeks.includes(w)).length === 0 && (
+                                            <div className="custom-select-option muted">All weeks selected</div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
 
                         <div className="form-group">
                             <label>Would you like to pay in full or in two parts? <span className="required">*</span></label>
@@ -904,10 +1066,6 @@ export default function NomadBooking() {
                             />
                             {errors.about && <div className="error-text">{errors.about}</div>}
                         </div>
-
-
-
-
 
                         {errors.form && <div className="error-text">{errors.form}</div>}
                     </div>
@@ -954,7 +1112,7 @@ export default function NomadBooking() {
                         </button>
                     </div>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 }
