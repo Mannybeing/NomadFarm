@@ -9,6 +9,15 @@ import {
 import "../styles/NomadBooking.css";
 
 // Helper to display week label
+// Helper to display immersion label
+function getImmersionDisplay(value: string) {
+    switch (value) {
+        case "tudo-arte-jan": return "Tudo E Arte January";
+        case "tudo-arte-mar": return "Tudo E Arte March";
+        case "soul-centered-entrepreneurship": return "Soul-Centered Entrepreneurship";
+        default: return value;
+    }
+}
 function weekLabel(week: string) {
     switch (week) {
         case "dec-week-1": return "Tudo E Arte Week 1 (Nov 30 - Dec 7)";
@@ -195,7 +204,6 @@ const getCountryDisplay = (countryCode: string): string => {
         "RE": "🇷🇪 +262",
         "RO": "🇷🇴 +40",
         "RU": "🇷🇺 +7",
-        "RW": "🇷🇼 +250",
         "BL": "🇧🇱 +590",
         "SH": "🇸🇭 +290",
         "KN": "🇰🇳 +1",
@@ -691,9 +699,15 @@ export default function NomadBooking() {
                 ...data,
                 whatsapp: whatsappFull,
                 userTimezone,
-                experienceType,
+                experienceType: experienceType ? experienceType.charAt(0).toUpperCase() + experienceType.slice(1) : experienceType,
                 experienceOption:
                     experienceType === "immersion" ? experienceOption : undefined,
+                experience:
+                    experienceType === "immersion"
+                        ? `Immersion: ${getImmersionDisplay(experienceOption)}`
+                        : experienceType === "coliving"
+                            ? `Coliving: ${colivingWeeks.map(weekLabel).join(", ")}`
+                            : undefined,
                 colivingWeeks:
                     experienceType === "coliving" ? colivingWeeks : undefined,
                 colivingWeeksCount:
@@ -947,6 +961,7 @@ export default function NomadBooking() {
                                     <option value="">Select...</option>
                                     <option value="tudo-arte-jan">Tudo E Arte January</option>
                                     <option value="tudo-arte-mar">Tudo E Arte March</option>
+                                    <option value="soul-centered-entrepreneurship">Soul-Centered Entrepreneurship</option>
                                 </select>
                                 {errors.experienceOption && <div className="error-text">{errors.experienceOption}</div>}
                             </div>
