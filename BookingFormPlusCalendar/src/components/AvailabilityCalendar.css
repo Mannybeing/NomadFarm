@@ -1,266 +1,143 @@
-/* AvailabilityCalendar.css - Compact Right Column Design */
-
-@font-face {
-    font-family: 'SoilMates';
-    src: url('../styles/fonts/SoilMates.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'SoilMates';
-    src: url('../styles/fonts/SoilMates.otf') format('opentype');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
+/* Global font override for calendar */
+.availability-calendar * {
+    font-family: var(--nf-body-font, 'RocGroteskCondensed'), 'Space Grotesk', 'Inter', sans-serif !important;
 }
 
 .availability-calendar {
-    display: block;
-    margin: 0 auto;
-    padding: 0;
-    background-color: transparent;
-    max-height: 400px;
-    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     width: 100%;
-    overflow-y: auto;
-    font-family: 'SoilMates', sans-serif !important;
-}
-
-/* Ensure all elements use SoilMates font */
-.availability-calendar *,
-.day-column *,
-.day-header,
-.time-slot-button,
-.no-availability {
-    font-family: 'SoilMates', sans-serif !important;
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 0 12px 24px 12px;
+    align-items: center;
 }
 
 .day-column {
-    margin-bottom: 12px;
-    display: block;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 3px solid #763F24;
+    border-radius: 26px;
+    padding: 12px 16px 20px 16px;
     background-color: #F5EDD0;
-    border: 2px solid #763F24;
-    border-radius: 15px;
-    padding: 12px;
-    box-shadow: 0 2px 8px rgba(139, 69, 19, 0.1);
+    box-shadow: 0 6px 16px rgba(118, 63, 36, 0.15);
 }
 
 .day-header {
+    text-align: center;
+    padding: 14px;
     background-color: #763F24;
     color: white;
-    padding: 8px 12px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 0.9rem;
-    border-radius: 10px;
-    margin-bottom: 8px;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-family: var(--nf-title-font, 'SoilMates'), sans-serif;
 }
 
 .day-slots {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4px;
-    margin-bottom: 0;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    gap: 12px 16px;
 }
 
-/* Time Slot Buttons - Compact 2-Column Layout */
 .time-slot-button {
+    padding: 14px 16px;
     background-color: #F5EDD0;
-    border: 2px solid #763F24;
-    border-radius: 10px;
-    padding: 6px 4px;
-    font-size: 0.65rem;
-    font-weight: 500;
+    border: 3px solid #763F24;
+    border-radius: 18px;
+    font-size: 0.9rem;
     color: #763F24;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     text-align: center;
-    font-family: 'SoilMates', sans-serif !important;
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 26px;
+    font-weight: 600;
+    font-family: var(--nf-body-font, 'RocGroteskCondensed'), 'Space Grotesk', 'Inter', sans-serif;
+    min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .time-slot-button:hover {
     border-color: #228b22;
-    background-color: rgba(34, 139, 34, 0.05);
-    transform: scale(1.02);
-    box-shadow: 0 1px 4px rgba(34, 139, 34, 0.2);
-    color: #763F24;
+    background-color: #f0f8f0;
+    transform: translateY(-1px);
 }
 
 .time-slot-button.selected {
     background-color: #228b22;
     border-color: #228b22;
     color: white;
-    transform: scale(1.02);
-    box-shadow: 0 2px 6px rgba(34, 139, 34, 0.3);
     font-weight: 600;
 }
 
-.time-slot-button.selected:hover {
-    background-color: #1e7b1e;
-    border-color: #1e7b1e;
+.no-availability {
+    text-align: center;
+    padding: 12px;
+    color: #999;
+    font-style: italic;
+    font-size: 0.9rem;
+    grid-column: 1 / -1;
+    font-family: var(--nf-body-font, 'RocGroteskCondensed'), 'Space Grotesk', 'Inter', sans-serif;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 12px;
+    font-family: var(--nf-title-font, 'SoilMates'), 'Amatic SC', serif !important;
+}
+
+.timezone-footer {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border: 1px solid #763F24;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: #763F24;
+    background-color: #f1e4c5;
+}
+
+.slot {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: var(--nf-body-font, 'RocGroteskCondensed'), 'Space Grotesk', 'Inter', sans-serif;
+}
+
+.slot:hover {
+    background-color: #f0f0f0;
+}
+
+.slot.selected {
+    background-color: #007bff;
     color: white;
 }
 
-.time-slot-button:active {
-    transform: translateY(0);
+.slot.unavailable {
+    background-color: #e9ecef;
+    cursor: not-allowed;
 }
 
-/* No Availability State - Clean */
-.no-availability {
-    color: #763F24;
-    font-style: italic;
-    text-align: center;
-    padding: 12px;
-    background-color: rgba(139, 69, 19, 0.05);
-    border: 2px dashed #763F24;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    margin: 4px 0;
-}
-
-/* Loading State - Compact */
-.calendar-loading {
-    text-align: center;
-    padding: 16px;
-    color: #763F24;
-    font-size: 0.9rem;
-}
-
-.calendar-loading::after {
-    content: '';
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #763F24;
-    border-top: 2px solid #763F24;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-left: 8px;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-/* Error State - Compact */
-.calendar-error {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-    color: #721c24;
-    font-size: 0.85rem;
-    margin: 8px 0;
-}
-
-/* Loading state with positioning - Compact */
-.availability-calendar.loading {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.availability-calendar.loading::after {
-    content: "Loading...";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 8px 16px;
-    border-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    font-size: 0.8rem;
-}
-
-/* Accessibility improvements */
-.time-slot-button:focus {
-    outline: 2px solid #4a90e2;
-    outline-offset: 2px;
-}
-
-.time-slot-button:focus:not(:focus-visible) {
-    outline: none;
-}
-
-.time-slot-button:focus-visible {
-    outline: 2px solid #4a90e2;
-    outline-offset: 2px;
-}
-
-/* Responsive Design - Ultra Compact */
+/* Media queries to ensure horizontal layout on all screen sizes */
 @media (max-width: 768px) {
     .availability-calendar {
-        max-height: 400px;
-    }
-
-    .day-column {
-        margin-bottom: 6px;
-    }
-
-    .day-header {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-    }
-
-    .day-slots {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 3px;
-    }
-
-    .time-slot-button {
-        padding: 5px 6px;
-        font-size: 0.7rem;
-        min-height: 24px;
-    }
-
-    .no-availability {
-        padding: 6px;
-        font-size: 0.7rem;
+        padding: 0 10px;
     }
 }
 
 @media (max-width: 480px) {
-    .availability-calendar {
-        max-height: 350px;
-    }
-
     .day-slots {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2px;
-    }
-
-    .time-slot-button {
-        padding: 4px 5px;
-        font-size: 0.65rem;
-        min-height: 22px;
-    }
-
-    .day-column {
-        margin-bottom: 4px;
-    }
-
-    .day-header {
-        padding: 5px 8px;
-        font-size: 0.75rem;
+        grid-template-columns: 1fr;
     }
 }
