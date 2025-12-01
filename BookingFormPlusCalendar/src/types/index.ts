@@ -29,6 +29,10 @@ export interface BookingData {
     paymentOption: string;
     alternativePricing: string;
     about: string;
+    soulCenteredInspiration: string;
+    currentProfessionalSituation: string;
+    soulCenteredCommitment: string;
+    integrationPhasePlan: string;
     selectedSlot: TimeSlot | null;
 }
 
@@ -50,6 +54,10 @@ export interface BookingErrors {
     paymentOption?: string;
     alternativePricing?: string;
     about?: string;
+    soulCenteredInspiration?: string;
+    currentProfessionalSituation?: string;
+    soulCenteredCommitment?: string;
+    integrationPhasePlan?: string;
     selectedSlot?: string;
     form?: string;
 }
