@@ -648,10 +648,13 @@ export default function NomadBooking() {
         return timezone.replace(/_/g, ' ');
     };
 
-    // Handler for selecting a slot in the calendar
-    const handleSlotSelect = (slot: TimeSlot | null) => {
-        update("selectedSlot", slot);
-    };
+    // Handler for selecting a slot in the calendar (stable so calendar doesn't rerender on every keystroke)
+    const handleSlotSelect = useCallback(
+        (slot: TimeSlot | null) => {
+            update("selectedSlot", slot);
+        },
+        [update]
+    );
 
     const validate = (): boolean => {
         const e: BookingErrors = {};
