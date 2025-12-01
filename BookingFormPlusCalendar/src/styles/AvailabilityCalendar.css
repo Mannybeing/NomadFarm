@@ -1,89 +1,62 @@
-/* Import fonts that match Nomad Farm's typography */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
-/* Custom SoilMates font */
-@font-face {
-    font-family: 'SoilMates';
-    src: url('../assets/fonts/SoilMates.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'SoilMates';
-    src: url('../assets/fonts/SoilMates.otf') format('opentype');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-}
-
 /* Global font override for calendar */
 .availability-calendar * {
-    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif !important;
-}
-
-.booking-calendar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 48px 0 20px 0;
-    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+    font-family: var(--nf-body-font, 'RocGroteskCondensed'), 'Space Grotesk', 'Inter', sans-serif !important;
 }
 
 .availability-calendar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     width: 100%;
-    max-width: 1400px;
+    max-width: 840px;
     margin: 0 auto;
-    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
-    min-width: 1200px;
-    padding: 0 36px;
+    padding: 0 12px 24px 12px;
+    align-items: center;
 }
 
 .day-column {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    min-height: 350px;
-    min-width: 280px;
+    border: 3px solid #763F24;
+    border-radius: 26px;
+    padding: 12px 16px 20px 16px;
+    background-color: #F5EDD0;
+    box-shadow: 0 6px 16px rgba(118, 63, 36, 0.15);
 }
 
 .day-header {
     text-align: center;
-    padding: 16px 12px;
+    padding: 14px;
     background-color: #763F24;
     color: white;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 1.1rem;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+    font-family: var(--nf-title-font, 'SoilMates'), sans-serif;
 }
 
 .day-slots {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    gap: 12px 16px;
 }
 
 .time-slot-button {
-    padding: 10px 14px;
+    padding: 14px 16px;
     background-color: #F5EDD0;
     border: 3px solid #763F24;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    border-radius: 18px;
+    font-size: 0.9rem;
     color: #763F24;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     text-align: center;
-    font-weight: 500;
-    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600;
+    font-family: var(--nf-body-font, 'RocGroteskCondensed'), 'Space Grotesk', 'Inter', sans-serif;
     min-height: 44px;
     display: flex;
     align-items: center;
@@ -105,20 +78,30 @@
 
 .no-availability {
     text-align: center;
-    padding: 16px;
+    padding: 12px;
     color: #999;
     font-style: italic;
     font-size: 0.9rem;
     grid-column: 1 / -1;
-    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+    font-family: var(--nf-body-font, 'RocGroteskCondensed'), 'Space Grotesk', 'Inter', sans-serif;
 }
 
 .calendar-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 10px;
-    font-family: 'SoilMates', 'Amatic SC', serif;
+    margin-bottom: 12px;
+    font-family: var(--nf-title-font, 'SoilMates'), 'Amatic SC', serif !important;
+}
+
+.timezone-footer {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border: 1px solid #763F24;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: #763F24;
+    background-color: #f1e4c5;
 }
 
 .slot {
@@ -129,7 +112,7 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-    font-family: 'SoilMates', 'Space Grotesk', 'Inter', sans-serif;
+    font-family: var(--nf-body-font, 'RocGroteskCondensed'), 'Space Grotesk', 'Inter', sans-serif;
 }
 
 .slot:hover {
@@ -149,29 +132,12 @@
 /* Media queries to ensure horizontal layout on all screen sizes */
 @media (max-width: 768px) {
     .availability-calendar {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 16px;
-        max-width: 100%;
-        overflow-x: auto;
-    }
-
-    .day-column {
-        min-width: 200px;
+        padding: 0 10px;
     }
 }
 
 @media (max-width: 480px) {
-    .availability-calendar {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 12px;
-        max-width: 100%;
-        overflow-x: auto;
-        padding: 0 8px;
-    }
-
-    .day-column {
-        min-width: 180px;
+    .day-slots {
+        grid-template-columns: 1fr;
     }
 }
