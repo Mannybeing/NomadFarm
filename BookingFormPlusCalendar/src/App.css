@@ -1,22 +1,6 @@
-@font-face {
-    font-family: 'SoilMates';
-    src: url('./styles/fonts/SoilMates.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'SoilMates';
-    src: url('./styles/fonts/SoilMates.otf') format('opentype');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-}
-
 body {
     margin: 0;
-    font-family: 'SoilMates', sans-serif !important;
+    font-family: var(--nf-body-font);
     background-color: #f4f4f4;
 }
 
