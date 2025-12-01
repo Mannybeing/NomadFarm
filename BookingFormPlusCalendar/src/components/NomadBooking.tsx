@@ -20,11 +20,17 @@ function getImmersionDisplay(value: string) {
 }
 function weekLabel(week: string) {
     switch (week) {
-        case "dec-week-1": return "Tudo E Arte Week 1 (Nov 30 - Dec 7)";
-        case "dec-week-2": return "Tudo E Arte Week 2 (Dec 7 - Dec 14)";
-        case "dec-week-3": return "Tudo E Arte Week 3 (Dec 14 - Dec 21)";
-        case "dec-week-4": return "Tudo E Arte Week 4 (Dec 21 - Dec 28)";
-        case "dec-week-5": return "Tudo E Arte Week 5 (Dec 28 - Jan 4)";
+        case "dec-week-1": return "Tudo E Arte Dec Week 1 (Nov 30 - Dec 7)";
+        case "dec-week-2": return "Tudo E Arte Dec Week 2 (Dec 7 - Dec 14)";
+        case "dec-week-3": return "Tudo E Arte Dec Week 3 (Dec 14 - Dec 21)";
+        case "dec-week-4": return "Tudo E Arte Dec Week 4 (Dec 21 - Dec 28)";
+        case "dec-week-5": return "Tudo E Arte Dec Week 5 (Dec 28 - Jan 4)";
+        case "feb-15-22": return "Tudo E Arte Feb Week 3 (Feb 15 - 22)";
+        case "feb-22-mar-1": return "Tudo E Arte Feb Week 4 (Feb 22 - Mar 1)";
+        case "apr-5-12": return "Tudo E Arte Apr Week 1 (Apr 5 - Apr 12)";
+        case "apr-12-19": return "Tudo E Arte Apr Week 2 (Apr 12 - Apr 19)";
+        case "apr-19-26": return "Tudo E Arte Apr Week 3 (Apr 19 - Apr 26)";
+        case "apr-26-may-3": return "Tudo E Arte Apr Week 4 (Apr 26 - May 3)";
         default: return week;
     }
 }
@@ -523,6 +529,10 @@ export default function NomadBooking() {
         paymentOption: "",
         alternativePricing: "",
         about: "",
+        soulCenteredInspiration: "",
+        currentProfessionalSituation: "",
+        soulCenteredCommitment: "",
+        integrationPhasePlan: "",
         selectedSlot: null,
         // Add new fields for experience type and option
     });
@@ -535,8 +545,15 @@ export default function NomadBooking() {
         "dec-week-2",
         "dec-week-3",
         "dec-week-4",
-        "dec-week-5"
+        "dec-week-5",
+        "feb-15-22",
+        "feb-22-mar-1",
+        "apr-5-12",
+        "apr-12-19",
+        "apr-19-26",
+        "apr-26-may-3"
     ];
+    const isSoulCenteredImmersion = experienceType === "immersion" && experienceOption === "soul-centered-entrepreneurship";
 
     const [errors, setErrors] = useState<BookingErrors>({});
     const [availability, setAvailability] = useState<AvailabilityPayload | null>(null);
@@ -657,6 +674,12 @@ export default function NomadBooking() {
         if (!data.paymentOption.trim()) e.paymentOption = "Required";
         if (!data.alternativePricing.trim()) e.alternativePricing = "Required";
         if (!data.about.trim()) e.about = "Required";
+        if (isSoulCenteredImmersion) {
+            if (!data.soulCenteredInspiration.trim()) e.soulCenteredInspiration = "Required";
+            if (!data.currentProfessionalSituation.trim()) e.currentProfessionalSituation = "Required";
+            if (!data.soulCenteredCommitment.trim()) e.soulCenteredCommitment = "Required";
+            if (!data.integrationPhasePlan.trim()) e.integrationPhasePlan = "Required";
+        }
         if (!data.selectedSlot) e.selectedSlot = "Please pick a time slot";
 
         // Email validation
@@ -967,6 +990,71 @@ export default function NomadBooking() {
                             </div>
                         )}
 
+                        {isSoulCenteredImmersion && (
+                            <>
+                                <div className="form-group">
+                                    <label>
+                                        What drew you to this particular immersion? What inspired you to join? What are you hoping to experience on this journey of self-discovery and aligned creation? <span className="required">*</span>
+                                    </label>
+                                    <textarea
+                                        value={data.soulCenteredInspiration}
+                                        onChange={(e) => update("soulCenteredInspiration", e.target.value)}
+                                        placeholder="Share what inspired you and what you hope to experience"
+                                    />
+                                    {errors.soulCenteredInspiration && <div className="error-text">{errors.soulCenteredInspiration}</div>}
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Current Professional Situation <span className="required">*</span></label>
+                                    <select
+                                        value={data.currentProfessionalSituation}
+                                        onChange={(e) => update("currentProfessionalSituation", e.target.value)}
+                                    >
+                                        <option value="">Select...</option>
+                                        <option value="Corporate/9-5 Employee">Corporate/9-5 Employee</option>
+                                        <option value="Freelancer/Consultant">Freelancer/Consultant</option>
+                                        <option value="Remote Worker/Digital Nomad">Remote Worker/Digital Nomad</option>
+                                        <option value="Business Owner/Entrepreneur (early-stage)">Business Owner/Entrepreneur (early-stage)</option>
+                                        <option value="Business Owner/Entrepreneur (established)">Business Owner/Entrepreneur (established)</option>
+                                        <option value="Between Jobs/In Transition/Unemployed">Between Jobs/In Transition/Unemployed</option>
+                                        <option value="Student">Student</option>
+                                    </select>
+                                    {errors.currentProfessionalSituation && <div className="error-text">{errors.currentProfessionalSituation}</div>}
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Can you commit to being fully present and taking time off work for the 2-week retreat? <span className="required">*</span></label>
+                                    <select
+                                        value={data.soulCenteredCommitment}
+                                        onChange={(e) => update("soulCenteredCommitment", e.target.value)}
+                                    >
+                                        <option value="">Select...</option>
+                                        <option value="Yes, I can take full time off">Yes, I can take full time off</option>
+                                        <option value="Yes, but I may need to check emails occasionally">Yes, but I may need to check emails occasionally</option>
+                                        <option value="Unsure, I have some commitments">Unsure, I have some commitments</option>
+                                        <option value="No, I need to work part-time during the retreat">No, I need to work part-time during the retreat</option>
+                                    </select>
+                                    {errors.soulCenteredCommitment && <div className="error-text">{errors.soulCenteredCommitment}</div>}
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Are you planning to stay for the Integration Phase (Feb 16-March 1)? <span className="required">*</span></label>
+                                    <select
+                                        value={data.integrationPhasePlan}
+                                        onChange={(e) => update("integrationPhasePlan", e.target.value)}
+                                    >
+                                        <option value="">Select...</option>
+                                        <option value="Yes, definitely">Yes, definitely</option>
+                                        <option value="Likely yes">Likely yes</option>
+                                        <option value="Not sure yet">Not sure yet</option>
+                                        <option value="No">No</option>
+                                        <option value="Need more information to decide">Need more information to decide</option>
+                                    </select>
+                                    {errors.integrationPhasePlan && <div className="error-text">{errors.integrationPhasePlan}</div>}
+                                </div>
+                            </>
+                        )}
+
                         {experienceType === "coliving" && (
                             <div className="form-group" style={{ position: "relative" }} ref={weeksRef}>
                                 <label>Which week(s)? <span className="required">*</span></label>
@@ -1108,11 +1196,13 @@ export default function NomadBooking() {
 
                         {!loadingAvail && availability && (
                             <>
-                                <AvailabilityCalendar
-                                    availability={availability}
-                                    selectedSlot={data.selectedSlot}
-                                    onSlotSelect={handleSlotSelect}
-                                />
+                                <div className="calendar-scroll">
+                                    <AvailabilityCalendar
+                                        availability={availability}
+                                        selectedSlot={data.selectedSlot}
+                                        onSlotSelect={handleSlotSelect}
+                                    />
+                                </div>
                                 {errors.selectedSlot && (
                                     <div className="error-text">{errors.selectedSlot}</div>
                                 )}
