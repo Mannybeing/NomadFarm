@@ -1,22 +1,27 @@
 @font-face {
     font-family: 'SoilMates';
-    src: url('./styles/fonts/SoilMates.otf') format('opentype');
-    font-weight: normal;
+    src: url('./assets/fonts/SoilMates.otf') format('opentype');
+    font-weight: 400 700;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'SoilMates';
-    src: url('./styles/fonts/SoilMates.otf') format('opentype');
-    font-weight: bold;
+    font-family: 'RocGroteskCondensed';
+    src: url('./assets/fonts/fonnts.com-Roc_Grotesk_Condensed_Medium.otf') format('opentype');
+    font-weight: 500;
     font-style: normal;
     font-display: swap;
 }
 
+:root {
+    --nf-title-font: 'SoilMates', sans-serif;
+    --nf-body-font: 'RocGroteskCondensed', sans-serif;
+}
+
 body {
     margin: 0;
-    font-family: 'SoilMates', sans-serif !important;
+    font-family: var(--nf-body-font);
     background-color: #f4f4f4;
 }
 
