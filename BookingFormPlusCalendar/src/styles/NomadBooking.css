@@ -54,7 +54,7 @@ label {
     font-size: 1.2rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    font-family: var(--nf-body-font);
+    font-family: var(--nf-title-font);
 }
 
 .booking-container input[type="text"],
@@ -256,6 +256,14 @@ label {
 :root {
     --nf-title-font: 'SoilMates', sans-serif;
     --nf-body-font: 'RocGroteskCondensed', sans-serif;
+}
+
+/* Ensure all field labels use the SoilMates title font */
+.booking-container label,
+.booking-container .form-group label,
+.booking-container .radio-item label,
+.booking-container .checkbox-item label {
+    font-family: var(--nf-title-font) !important;
 }
 
 h1,
